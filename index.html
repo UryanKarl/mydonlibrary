@@ -232,8 +232,8 @@
             font-size: 0.8rem;
         }
 
-        /* 动画陈列区 */
-        .episodes-section, .illustrations-section {
+        /* 各陈列区通用样式 */
+        .episodes-section, .illustrations-section, .research-section, .skin-section {
             margin-bottom: 2.5rem;
             border: 2px solid var(--primary-gold);
             border-radius: 8px;
@@ -273,13 +273,15 @@
             border-color: var(--primary-blue);
         }
 
-        .episodes-grid, .illustrations-grid {
+        /* 卡片网格布局 */
+        .episodes-grid, .illustrations-grid, .research-grid, .skin-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 1.2rem;
         }
 
-        .episode-card, .illustration-card {
+        /* 卡片通用样式 */
+        .episode-card, .illustration-card, .research-card, .skin-card {
             border: 1px solid var(--dark-parchment);
             border-radius: 8px;
             overflow: hidden;
@@ -288,7 +290,7 @@
             cursor: pointer;
         }
 
-        .episode-card:hover, .illustration-card:hover {
+        .episode-card:hover, .illustration-card:hover, .research-card:hover, .skin-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px var(--shadow-color);
         }
@@ -313,7 +315,9 @@
         }
 
         .episode-card:hover .card-cover-image,
-        .illustration-card:hover .card-cover-image {
+        .illustration-card:hover .card-cover-image,
+        .research-card:hover .card-cover-image,
+        .skin-card:hover .card-cover-image {
             transform: scale(1.05);
         }
 
@@ -332,7 +336,9 @@
         }
 
         .episode-card:hover .card-overlay,
-        .illustration-card:hover .card-overlay {
+        .illustration-card:hover .card-overlay,
+        .research-card:hover .card-overlay,
+        .skin-card:hover .card-overlay {
             opacity: 1;
         }
 
@@ -432,7 +438,7 @@
                 gap: 12px;
             }
             
-            .episodes-grid, .illustrations-grid {
+            .episodes-grid, .illustrations-grid, .research-grid, .skin-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -526,12 +532,38 @@
             
             <div class="category-tabs">
                 <button class="category-tab active" data-category="all">全部</button>
-                <button class="category-tab" data-category="serious">正经插画</button>
-                <button class="category-tab" data-category="meme">梗图</button>
+                <button class="category-tab" data-category="serious">严肃向</button>
+                <button class="category-tab" data-category="meme">萌系</button>
             </div>
             
             <div class="illustrations-grid" id="illustrations-container">
                 <!-- 插画卡片将通过JavaScript动态生成 -->
+            </div>
+        </section>
+        
+        <!-- 考据视频区 -->
+        <section class="research-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-search section-icon"></i>
+                    <h2 id="research-title">图书馆的考据室</h2>
+                </div>
+            </div>
+            <div class="research-grid" id="research-container">
+                <!-- 考据视频卡片将通过JavaScript动态生成 -->
+            </div>
+        </section>
+        
+        <!-- 输入法皮肤区 -->
+        <section class="skin-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-keyboard section-icon"></i>
+                    <h2 id="skin-title">图书馆的文具阁</h2>
+                </div>
+            </div>
+            <div class="skin-grid" id="skin-container">
+                <!-- 皮肤卡片将通过JavaScript动态生成 -->
             </div>
         </section>
     </div>
@@ -549,9 +581,268 @@
     </footer>
     
     <script>
-        // 网站数据 - 中英双语
-        const websiteData = {
-            zh: {
+        // ===================== 1. 重构后的核心数据 =====================
+        // 1.1 所有作品的通用信息库 (不随语言改变)
+        const allWorks = [
+            // ===== 动画 (type: 'episode') =====
+            {
+                id: 1,
+                type: 'episode',
+                storyOrder: 1,
+                updateDateISO: "2025-05-05",
+                chineseLink: "https://www.bilibili.com/video/BV1EUVqzpEnh/",
+                englishLink: "https://x.com/UryanKarl/status/1919328501749998045",
+                bvid: "BV1EUVqzpEnh",
+                coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WhpR8OaB223v8lbh1VhTn3l-rKO4wACGB4AAi-0QVYY8g3sEYGtTzYE.jpg"
+            },
+            {
+                id: 2,
+                type: 'episode',
+                storyOrder: 2,
+                updateDateISO: "2025-05-12",
+                chineseLink: "https://www.bilibili.com/video/BV15PEEzMEiM",
+                englishLink: "https://x.com/UryanKarl/status/1921952005532102743",
+                bvid: "BV15PEEzMEiM",
+                coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WZpR8Oa-uNstbiSP15qoRstmj020gACFh4AAi-0QVYjSw3G9fU_PjYE.jpg"
+            },
+			
+                    {
+                        id: 3,
+						type: 'episode',
+                        storyOrder: 3,
+                        updateDateISO: "2025-04-28",
+                        chineseLink: "https://www.bilibili.com/video/BV1SnLmzME8u/",
+                        englishLink: "https://x.com/UryanKarl/status/1917085258551595023",
+                        bvid: "BV1SnLmzME8u",
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WppR8Oht8PvHFPp7fftO9CZtn2UwAACGh4AAi-0QVZkexUYBONdezYE.jpg"
+                    },
+					{
+                        id: 4,
+						type: 'episode',
+                        storyOrder: 4,
+                        updateDateISO: "2025-08-01",
+                        chineseLink: "https://www.bilibili.com/video/BV1DVhJzPEE7",
+                        englishLink: "https://x.com/UryanKarl/status/1977595873824760010",
+                        bvid: "BV1DVhJzPEE7",
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WlpR8OahbojFzHzzvcKo3VuxKEghQACGR4AAi-0QVYN0PA_1ymYIzYE.jpg"
+                    },
+					{
+                        id: 5,
+						type: 'episode',
+                        storyOrder: 5,
+                        updateDateISO: "2025-08-13",
+                        chineseLink: "https://www.bilibili.com/video/BV1UEb8zXEdn",
+                        englishLink: "https://x.com/UryanKarl/status/1977595873824760010",
+                        bvid: "BV1UEb8zXEdn",
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WdpR8Oai-B3UPfKPJMW1nYk65ANdAACFx4AAi-0QVabQMSwKUiDoTYE.jpg"
+                    },
+					{
+                        id: 6,
+						type: 'episode',
+                        storyOrder: 6,
+                        updateDateISO: "2025-10-08",
+                        chineseLink: "https://www.bilibili.com/video/BV1ZCxez3ECk/",
+                        englishLink: "https://x.com/UryanKarl/status/1977595873824760010",
+                        bvid: "BV1ZCxez3ECk",
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WtpR8Ohcwi8SpuLhHYS1ndiV5mDOgACGx4AAi-0QVaLCj4oyqpxsTYE.jpg"
+                    },
+                    {
+                        id: 7,
+						type: 'episode',
+                        storyOrder: 7,
+                        updateDateISO: "2025-11-05",
+                        chineseLink: "https://www.bilibili.com/video/BV15N1WBTEb9",
+                        englishLink: "https://x.com/UryanKarl/status/1986813834653564935",
+                        bvid: "BV15N1WBTEb9",
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WVpR8OZufKgZh-kuNe_zNDt0ZiiKQACFR4AAi-0QVaNa5IObu4-izYE.jpg"
+                    },
+            // ===== 插画 (type: 'illustration') =====
+            {
+                id: 101,
+                type: 'illustration',
+                category: 'serious',
+                updateDateISO: "2025-03-01",
+                chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2bdff323b",
+                englishLink: "https://x.com/UryanKarl/status/1895507738068930788",
+                coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VZpR8CCqKwe_woRbu7HSEahNTFaEAAC-h0AAi-0QVbzvmKuPwODSDYE.jpg"
+            },
+            {
+                id: 102,
+                type: 'illustration',
+                category: 'serious',
+                updateDateISO: "2025-03-08",
+                chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be0d4341",
+                englishLink: "https://x.com/UryanKarl/status/1898323112422433221",
+                coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VRpR8B6QgoBdU_3injaK83R__ZX7gAC-B0AAi-0QVZ2yie-SsMXjTYE.jpg"
+            },
+			
+                    {
+                        id: 103,
+						type: 'illustration',
+                        updateDateISO: "2025-03-09",
+                        category: "serious",
+                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be109a89",
+                        englishLink: "https://x.com/UryanKarl/status/1898760283700809949",
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7TxpR7xbjhCodd4HRxBaSyUpaQaLMgAC3h0AAi-0QValdypS1zxIyzYE.jpg"
+                    },
+					
+					{
+                        id: 104,
+						type: 'illustration',
+                        updateDateISO: "2025-03-10",
+                        category: "meme",
+                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be115045",
+                        englishLink: "https://x.com/UryanKarl/status/1898907637774713333",
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VdpR8CG-HjyB1CgKseoyXPk_797GQAC-x0AAi-0QVa5-jWHJafZ_zYE.jpg"
+                    },
+					
+					{
+                        id: 105,
+						type: 'illustration',
+                        updateDateISO: "2025-03-12",
+                        category: "serious",
+                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be14cb90",
+                        englishLink: "https://x.com/UryanKarl/status/1899805137956401311",
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VVpR8B9CHkDY4rzw6qJCzG2JrO5ugAC-R0AAi-0QVaPwlMXPn685TYE.jpg"
+                    },
+					{
+                        id: 107,
+						type: 'illustration',
+                        updateDateISO: "2025-5-11",
+                        category: "serious",
+                        tags: ["3.3前瞻观后感"],
+                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be809d1e",
+                        englishLink: "https://x.com/UryanKarl/status/1921254055520657744",
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7T5pR7yVcrPTtSDlZllsyVMvdSJHYgAC4B0AAi-0QVaS_CvmZlMTfzYE.png"
+                    },
+					{
+                        id: 106,
+						type: 'illustration',
+                        updateDateISO: "2025-05-17",
+                        category: "serious",
+                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be89a736",
+                        englishLink: "https://x.com/UryanKarl/status/1923658003787677823",
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7TtpR7wTpcGrNHsWEM72ZeLKQG5gcAAC2x0AAi-0QVZrAfH9W-CxsjYE.png"
+                    },
+					{
+                        id: 108,
+						type: 'illustration',
+                        updateDateISO: "2025-06-02",
+                        category: "meme",
+                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2beaa03fa",
+                        englishLink: "https://x.com/UryanKarl/status/1929495025567899741",
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VlpR8Dhcf0lGG_IKfqkv9LzxXQd9gAC_R0AAi-0QVakUO6CYrKE-zYE.png"
+                    },
+					{
+                        id: 109,
+						type: 'illustration',
+                        updateDateISO: "2025-10-21",
+                        category: "meme",
+                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_34c77bd89",
+                        englishLink: "https://x.com/UryanKarl/status/1980318971477012870",
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VxpR8E_T-k2kA1Yad0YrabOexGPPwACAR4AAi-0QVYwWWmpTddIPDYE.jpg"
+                    },
+					{
+                        id: 110,
+						type: 'illustration',
+                        updateDateISO: "2025-10-26",
+                        category: "meme",
+                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_34c80936d",
+                        englishLink: "https://x.com/UryanKarl/status/1982445953882992980",
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VtpR8E_W-uX33V0LLJOTlXDopGLZAADHgACL7RBVjMPMq0aCSgXNgQ.jpg"
+                    },
+					{
+                        id: 111,
+						type: 'illustration',
+                        updateDateISO: "2025-12-12",
+                        category: "meme",
+                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_34cc98558",
+                        englishLink: "https://x.com/UryanKarl/status/1999411114732573039",
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VppR8E_lY6Cn3RgqVyH4Sg-aU-a4AAC_x0AAi-0QVZ13F936An-FDYE.jpg"
+                    },
+                    {
+                        id: 112,
+						type: 'illustration',
+                        updateDateISO: "2025-12-12",
+                        category: "meme",
+                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_34cc91e9d",
+                        englishLink: "https://x.com/UryanKarl/status/1999411906310996095",
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7V1pR8E_Bd7vffgacOKpLRB977wvkgACAh4AAi-0QVaoieMc5cMn5DYE.jpg"
+                    },
+            // ===== 考据视频 (type: 'research') =====
+            {
+                id: 201,
+                type: 'research',
+                updateDateISO: "2025-11-24",
+                chineseLink: "https://www.bilibili.com/video/BV1yFUTBjEGw/",
+                englishLink: "https://x.com/UryanKarl/status/2002608869219205523",
+                bvid: "BV1yFUTBjEGw",
+                coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7cNpR9v6954n_TienprGVQPwx8Us6gACnx4AAi-0QVZYolB22AR59jYE.png"
+            },
+            // ===== 输入法皮肤 (type: 'skin') =====
+            {
+                id: 301,
+                type: 'skin',
+                updateDateISO: "2025-07-08",
+                chineseLink: "https://pan.baidu.com/s/1hLTMR5tayoz84pYU15R05g?pwd=65tx",
+                englishLink: "https://x.com/UryanKarl/status/1942540406014837156",
+                fileSize: "356KB",
+                coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7dVpR9zbQG5JJQaE1dtkLKrj_LTq6AACtR4AAi-0QVbXQz7HsUc9lTYE.png"
+            },
+            {
+                id: 302,
+                type: 'skin',
+                updateDateISO: "2025-07-10",
+                chineseLink: "https://pan.baidu.com/s/1oPHCVUrNGlFv8nZfoeIGHw?pwd=mdms",
+                englishLink: "https://x.com/UryanKarl/status/1943192888273440779",
+                fileSize: "293KB",
+                coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7dRpR9zYNXBDkpbpzXovSZ2CTgAB9NUAArQeAAIvtEFWV6RPG4_SR1Y2BA.png"
+            }
+        ];
+
+        // 1.2 翻译映射表 (按语言和作品ID存储标题和标签)
+        const translations = {
+            'zh': {
+                // 动画标题和标签
+                1: { title: "万敌，我要去当祭品了", tags: ["别跟万敌开玩笑"] },
+                2: { title: "万敌，你听说过走马灯吗？", tags: ["泡澡"] },
+                3: { title: "万敌和白厄连挚友都算不上", tags: ["采访","相性一百问（划掉)"] },
+                4: { title: "“喂喂，救世主，能看到吗？”", tags: ["视频通话", "论监控摄像头的妙用", "3.3万敌剧情补充"] },
+                5: { title: "白厄和万敌算哪门子宿敌啊", tags: ["吃播", "微量夏雅"] },
+                6: { title: "哥们！？你是在跟我开玩笑吗！？", tags: ["别跟万敌开玩笑", "白厄能怀孕（确信）"] },
+                7: { title: "万敌，你为什么戴着蓝宝石耳坠？", tags: ["永劫回归33550337", "万敌的树庭留学记", "（上篇）"] },
+                // 插画标题和标签
+                101: { title: "“祝你战无不胜，迈德漠斯”", tags: ["3.1玩后感"] },
+                102: { title: "纯蓝", tags: ["原曲是COP的《纯蓝》"] },
+                // 考据视频标题和标签
+                201: { title: "米哈游如何用三种羊隐喻白厄", tags: ["羊塑", "考据"] },
+                // 皮肤标题和标签
+                301: { title: "麦田中的比格椰 搜狗皮肤", tags: ["仅限PC端", "动态特效"] },
+                302: { title: "蜜果羹的移动堡垒 搜狗皮肤", tags: ["仅限PC端", "动态特效"] },
+            },
+            'en': {
+                // Animation
+                1: { title: "'Sacrificial Offering'", tags: ["Don't joke to Mydei"] },
+                2: { title: "Have you ever heard of a Revolving Lantern?", tags: ["Bathing together"] },
+                3: { title: "Are you 2 not friends?", tags: ["Interview"] },
+                4: { title: "'Deliverer, can you see me?'", tags: ["How to use CCTV", "to leave video messages to your wife"] },
+                5: { title: "Bros are just keep eating honey cakes", tags: ["ASMR(what)", "(a little bit Anagleae)"] },
+                6: { title: "Bro are you joking!?", tags: ["that's not a joke","Mpreg(sort of)"] },
+                7: { title: "Mydei, why are you wearing that sapphire earing?", tags: ["cycle#33550337", "Mydei in the Grove", "1/3"] },
+                // Illustrations
+                101: { title: "“May You Be Ever Victorious, Mademus”", tags: ["After 3.1 Story"] },
+                102: { title: "Pure Blue", tags: ["Original song: COP - Pure Blue"] },
+                // Research Videos
+                201: { title: "How hyv use Goat, Oryx and Sheep to metaphorize Phainon", tags: ["metaphor", "research"] },
+                // Skins
+                301: { title: "Beagle Coconut", tags: ["Sogou Pinin Input Skin","PC only"] },
+                302: { title: "Fig Stew", tags: ["Sogou Pinin Input Skin","PC only"] },
+            }
+        };
+
+        // 1.3 网站界面文本翻译
+        const websiteText = {
+            'zh': {
                 siteTitle: "拥抱黎明的图书馆",
                 siteSubtitle: "Library of MyDawn",
                 adminText: "管理员: ",
@@ -562,236 +853,16 @@
                 featuredTitle: "最新动画",
                 episodesTitle: "图书馆的影音库",
                 illustrationsTitle: "图书馆的藏画馆",
+                researchTitle: "图书馆的考据室",
+                skinTitle: "图书馆的文具阁",
                 sortStory: "按故事发展顺序",
                 sortUpdate: "按最新更新",
                 categoryAll: "全部",
                 categorySerious: "严肃向",
-                categoryMeme: "萌系",
-                featuredVideoTitle: "万敌，你为什么戴蓝宝石耳坠",
-                featuredEpTitle: "万敌，你为什么戴蓝宝石耳坠",
-                episodes: [
-                    {
-                        id: 1,
-                        title: "万敌，我要去当祭品了",
-                        storyOrder: 1,
-                        updateDate: "2025-05-05",
-                        updateDateISO: "2025-05-05",
-                        tags: ["别跟万敌开玩笑"],
-                        chineseLink: "https://www.bilibili.com/video/BV1EUVqzpEnh/",
-                        englishLink: "https://x.com/UryanKarl/status/1919328501749998045",
-                        bvid: "BV1EUVqzpEnh",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WhpR8OaB223v8lbh1VhTn3l-rKO4wACGB4AAi-0QVYY8g3sEYGtTzYE.jpg"
-                    },
-					{
-                        id: 2,
-                        title: "万敌，你听说过走马灯吗？",
-                        storyOrder: 2,
-                        updateDate: "2025-05-12",
-                        updateDateISO: "2025-05-12",
-                        tags: ["泡澡"],
-                        chineseLink: "https://www.bilibili.com/video/BV15PEEzMEiM",
-                        englishLink: "https://x.com/UryanKarl/status/1919328501749998045",
-                        bvid: "BV15PEEzMEiM",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WZpR8Oa-uNstbiSP15qoRstmj020gACFh4AAi-0QVYjSw3G9fU_PjYE.jpg"
-                    },
-                    {
-                        id: 3,
-                        title: "万敌和白厄连挚友都算不上",
-                        storyOrder: 3,
-                        updateDate: "2025-04-28",
-                        updateDateISO: "2025-04-28",
-                        tags: ["采访"],
-                        chineseLink: "https://www.bilibili.com/video/BV1SnLmzME8u/",
-                        englishLink: "https://x.com/UryanKarl/status/1917085258551595023",
-                        bvid: "BV1SnLmzME8u",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WppR8Oht8PvHFPp7fftO9CZtn2UwAACGh4AAi-0QVZkexUYBONdezYE.jpg"
-                    },
-					{
-                        id: 4,
-                        title: "喂喂，救世主，能看到吗？",
-                        storyOrder: 4,
-                        updateDate: "2025-08-01",
-                        updateDateISO: "2025-08-01",
-                        tags: ["视频通话", "论监控摄像头的妙用", "3.3万敌剧情补充"],
-                        chineseLink: "https://www.bilibili.com/video/BV1DVhJzPEE7",
-                        englishLink: "https://x.com/UryanKarl/status/1977595873824760010",
-                        bvid: "BV1DVhJzPEE7",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WlpR8OahbojFzHzzvcKo3VuxKEghQACGR4AAi-0QVYN0PA_1ymYIzYE.jpg"
-                    },
-					{
-                        id: 5,
-                        title: "白厄和万敌算哪门子宿敌啊",
-                        storyOrder: 5,
-                        updateDate: "2025-08-13",
-                        updateDateISO: "2025-08-13",
-                        tags: ["吃播", "微量夏雅"],
-                        chineseLink: "https://www.bilibili.com/video/BV1UEb8zXEdn",
-                        englishLink: "https://x.com/UryanKarl/status/1977595873824760010",
-                        bvid: "BV1UEb8zXEdn",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WdpR8Oai-B3UPfKPJMW1nYk65ANdAACFx4AAi-0QVabQMSwKUiDoTYE.jpg"
-                    },
-					{
-                        id: 6,
-                        title: "哥们！？你是在跟我开玩笑吗！？",
-                        storyOrder: 6,
-                        updateDate: "2025-10-08",
-                        updateDateISO: "2025-10-08",
-                        tags: ["别跟万敌开玩笑", "白厄能怀孕（确信）"],
-                        chineseLink: "https://www.bilibili.com/video/BV1ZCxez3ECk/",
-                        englishLink: "https://x.com/UryanKarl/status/1977595873824760010",
-                        bvid: "BV1ZCxez3ECk",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WtpR8Ohcwi8SpuLhHYS1ndiV5mDOgACGx4AAi-0QVaLCj4oyqpxsTYE.jpg"
-                    },
-                    {
-                        id: 7,
-                        title: "万敌，你为什么戴蓝宝石耳坠",
-                        storyOrder: 7,
-                        updateDate: "2025年11月05日",
-                        updateDateISO: "2025-11-05",
-                        tags: ["永劫回归33550337", "万敌的树庭留学记", "（上篇）"],
-                        chineseLink: "https://www.bilibili.com/video/BV15N1WBTEb9",
-                        englishLink: "https://x.com/UryanKarl/status/1986813834653564935",
-                        bvid: "BV15N1WBTEb9",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WVpR8OZufKgZh-kuNe_zNDt0ZiiKQACFR4AAi-0QVaNa5IObu4-izYE.jpg"
-                    }
-                ],
-                illustrations: [
-                    {
-                        id: 1,
-                        title: "“祝你战无不胜，迈德漠斯”",
-                        updateDate: "2025-03-01",
-                        updateDateISO: "2025-03-01",
-                        category: "serious",
-                        tags: ["3.1玩后感"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2bdff323b",
-                        englishLink: "https://x.com/UryanKarl/status/1895507738068930788",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VZpR8CCqKwe_woRbu7HSEahNTFaEAAC-h0AAi-0QVbzvmKuPwODSDYE.jpg"
-                    },
-                    {
-                        id: 2,
-                        title: "纯蓝",
-                        updateDate: "2025-03-08",
-                        updateDateISO: "2025-03-08",
-                        category: "serious",
-                        tags: ["原曲是COP的《纯蓝》"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be0d4341",
-                        englishLink: "https://x.com/UryanKarl/status/1898323112422433221",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VRpR8B6QgoBdU_3injaK83R__ZX7gAC-B0AAi-0QVZ2yie-SsMXjTYE.jpg"
-                    },
-                    {
-                        id: 3,
-                        title: "“此去恐无归期。我能把后背托付给你们吗？”",
-                        updateDate: "2025-03-09",
-                        updateDateISO: "2025-03-09",
-                        category: "serious",
-                        tags: ["3.1玩后感"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be109a89",
-                        englishLink: "https://x.com/UryanKarl/status/1898760283700809949",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7TxpR7xbjhCodd4HRxBaSyUpaQaLMgAC3h0AAi-0QValdypS1zxIyzYE.jpg"
-                    },
-					{
-                        id: 4,
-                        title: "鼹鼠星穹",
-                        updateDate: "2025-03-10",
-                        updateDateISO: "2025-03-10",
-                        category: "meme",
-                        tags: ["回归一下舒适区","摩尔庄园"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be115045",
-                        englishLink: "https://x.com/UryanKarl/status/1898907637774713333",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VdpR8CG-HjyB1CgKseoyXPk_797GQAC-x0AAi-0QVa5-jWHJafZ_zYE.jpg"
-                    },
-					{
-                        id: 5,
-                        title: "王妃坐",
-                        updateDate: "2025-03-12",
-                        updateDateISO: "2025-03-12",
-                        category: "serious",
-                        tags: ["万敌《走进星穹》"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be14cb90",
-                        englishLink: "https://x.com/UryanKarl/status/1899805137956401311",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VVpR8B9CHkDY4rzw6qJCzG2JrO5ugAC-R0AAi-0QVaPwlMXPn685TYE.jpg"
-                    },
-					{
-                        id: 7,
-                        title: "拥抱",
-                        updateDate: "2025-5-11",
-                        updateDateISO: "2025-5-11",
-                        category: "serious",
-                        tags: ["3.3前瞻观后感"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be809d1e",
-                        englishLink: "https://x.com/UryanKarl/status/1921254055520657744",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7T5pR7yVcrPTtSDlZllsyVMvdSJHYgAC4B0AAi-0QVaS_CvmZlMTfzYE.png"
-                    },
-					{
-                        id: 6,
-                        title: "冥河烈火",
-                        updateDate: "2025-05-17",
-                        updateDateISO: "2025-05-17",
-                        category: "serious",
-                        tags: ["3.2玩后感"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be89a736",
-                        englishLink: "https://x.com/UryanKarl/status/1923658003787677823",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7TtpR7wTpcGrNHsWEM72ZeLKQG5gcAAC2x0AAi-0QVZrAfH9W-CxsjYE.png"
-                    },
-					{
-                        id: 8,
-                        title: "白厄和七美拉",
-                        updateDate: "2025-06-02",
-                        updateDateISO: "2025-06-02",
-                        category: "meme",
-                        tags: ["奇美拉"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2beaa03fa",
-                        englishLink: "https://x.com/UryanKarl/status/1929495025567899741",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VlpR8Dhcf0lGG_IKfqkv9LzxXQd9gAC_R0AAi-0QVakUO6CYrKE-zYE.png"
-                    },
-					{
-                        id: 9,
-                        title: "叠叠乐",
-                        updateDate: "2025-10-21",
-                        updateDateISO: "2025-10-21",
-                        category: "meme",
-                        tags: ["“敌厄”谐音“叠”","让人忍俊不禁"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_34c77bd89",
-                        englishLink: "https://x.com/UryanKarl/status/1980318971477012870",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VxpR8E_T-k2kA1Yad0YrabOexGPPwACAR4AAi-0QVYwWWmpTddIPDYE.jpg"
-                    },
-					{
-                        id: 10,
-                        title: "飞扑",
-                        updateDate: "2025-10-26",
-                        updateDateISO: "2025-10-26",
-                        category: "meme",
-                        tags: ["努努"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_34c80936d",
-                        englishLink: "https://x.com/UryanKarl/status/1982445953882992980",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VtpR8E_W-uX33V0LLJOTlXDopGLZAADHgACL7RBVjMPMq0aCSgXNgQ.jpg"
-                    },
-					{
-                        id: 11,
-                        title: "热血沸腾的组合技",
-                        updateDate: "2025-12-12",
-                        updateDateISO: "2025-12-12",
-                        category: "meme",
-                        tags: ["货币战争"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_34cc98558",
-                        englishLink: "https://x.com/UryanKarl/status/1999411114732573039",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VppR8E_lY6Cn3RgqVyH4Sg-aU-a4AAC_x0AAi-0QVZ13F936An-FDYE.jpg"
-                    },
-                    {
-                        id: 12,
-                        title: "两拳超人",
-                        updateDate: "2025-12-12",
-                        updateDateISO: "2025-12-12",
-                        category: "meme",
-                        tags: ["货币战争"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_34cc91e9d",
-                        englishLink: "https://x.com/UryanKarl/status/1999411906310996095",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7V1pR8E_Bd7vffgacOKpLRB977wvkgACAh4AAi-0QVaoieMc5cMn5DYE.jpg"
-                    }
-                ]
+                categoryMeme: "萌系"
             },
-            en: {
-                siteTitle: "Library of MyDawn ",
+            'en': {
+                siteTitle: "Library of MyDawn",
                 siteSubtitle: "拥抱黎明的图书馆",
                 adminText: "Admin: ",
                 siteDescription: "Amphoreus FanWork",
@@ -801,539 +872,363 @@
                 featuredTitle: "Latest Animation",
                 episodesTitle: "Library's Video Archive",
                 illustrationsTitle: "Library's Art Gallery",
+                researchTitle: "Library's Research Room",
+                skinTitle: "Library's Stationery",
                 sortStory: "By Story Order",
                 sortUpdate: "By Update Date",
                 categoryAll: "All",
                 categorySerious: "Serious Art",
-                categoryMeme: "Meme",
-                featuredVideoTitle: "Episode 3: 'Mydei, Why Are You Wearing Sapphire Earrings?'",
-                featuredEpTitle: "Episode 3: 'Mydei, Why Are You Wearing Sapphire Earrings?'",
-                episodes: [
-                    {
-                        id: 1,
-                        title: "'Sacrificial Offering'",
-                        storyOrder: 1,
-                        updateDate: "2025-05-05",
-                        updateDateISO: "2025-05-05",
-                        tags: ["Don't joke to Mydei"],
-                        chineseLink: "https://www.bilibili.com/video/BV1EUVqzpEnh/",
-                        englishLink: "https://x.com/UryanKarl/status/1919328501749998045",
-                        bvid: "BV1EUVqzpEnh",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WhpR8OaB223v8lbh1VhTn3l-rKO4wACGB4AAi-0QVYY8g3sEYGtTzYE.jpg"
-                    },
-					{
-                        id: 2,
-                        title: "Have you ever heard of a Revolving Lantern?",
-                        storyOrder: 2,
-                        updateDate: "2025-05-12",
-                        updateDateISO: "2025-05-12",
-                        tags: ["Bathing together"],
-                        chineseLink: "https://www.bilibili.com/video/BV15PEEzMEiM",
-                        englishLink: "https://x.com/UryanKarl/status/1921952005532102743",
-                        bvid: "BV15PEEzMEiM",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WZpR8Oa-uNstbiSP15qoRstmj020gACFh4AAi-0QVYjSw3G9fU_PjYE.jpg"
-                    },
-                    {
-                        id: 3,
-                        title: "Are you 2 not friends?",
-                        storyOrder: 3,
-                        updateDate: "2025-04-28",
-                        updateDateISO: "2025-04-28",
-                        tags: ["Interview"],
-                        chineseLink: "https://www.bilibili.com/video/BV1SnLmzME8u/",
-                        englishLink: "https://x.com/UryanKarl/status/1917085258551595023",
-                        bvid: "BV1SnLmzME8u",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WppR8Oht8PvHFPp7fftO9CZtn2UwAACGh4AAi-0QVZkexUYBONdezYE.jpg"
-                    },
-					{
-                        id: 4,
-                        title: "'Deliverer, can you see me?'",
-                        storyOrder: 4,
-                        updateDate: "2025-08-01",
-                        updateDateISO: "2025-08-01",
-                        tags: ["How to use CCTV", "to leave video messages to your wife"],
-                        chineseLink: "https://www.bilibili.com/video/BV1DVhJzPEE7",
-                        englishLink: "https://x.com/UryanKarl/status/1951536670299529344",
-                        bvid: "BV1DVhJzPEE7",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WlpR8OahbojFzHzzvcKo3VuxKEghQACGR4AAi-0QVYN0PA_1ymYIzYE.jpg"
-                    },
-					{
-                        id: 5,
-                        title: "Bros are just keep eating honey cakes",
-                        storyOrder: 5,
-                        updateDate: "2025-08-13",
-                        updateDateISO: "2025-08-13",
-                        tags: ["eat", "(a little bit Anagleae)"],
-                        chineseLink: "https://www.bilibili.com/video/BV1UEb8zXEdn",
-                        englishLink: "https://x.com/UryanKarl/status/1957354397178163511",
-                        bvid: "BV1UEb8zXEdn",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WdpR8Oai-B3UPfKPJMW1nYk65ANdAACFx4AAi-0QVabQMSwKUiDoTYE.jpg"
-                    },
-					{
-                        id: 6,
-                        title: "Bro are you joking!?",
-                        storyOrder: 6,
-                        updateDate: "2025-10-08",
-                        updateDateISO: "2025-10-08",
-                        tags: ["that's not a joke"],
-                        chineseLink: "https://www.bilibili.com/video/BV1ZCxez3ECk/",
-                        englishLink: "https://x.com/UryanKarl/status/1977595873824760010",
-                        bvid: "BV1ZCxez3ECk",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WtpR8Ohcwi8SpuLhHYS1ndiV5mDOgACGx4AAi-0QVaLCj4oyqpxsTYE.jpg"
-                    },
-                    {
-                        id: 7,
-                        title: "Mydei，why are you wearing that sapphire earing?",
-                        storyOrder: 7,
-                        updateDate: "2025年11月05日",
-                        updateDateISO: "2025-11-05",
-                        tags: ["cycle#33550337", "Mydei in the Grove", "（1/3）"],
-                        chineseLink: "https://www.bilibili.com/video/BV15N1WBTEb9",
-                        englishLink: "https://x.com/UryanKarl/status/1986813834653564935",
-                        bvid: "BV15N1WBTEb9",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WVpR8OZufKgZh-kuNe_zNDt0ZiiKQACFR4AAi-0QVaNa5IObu4-izYE.jpg"
-                    }
-                ],
-                illustrations: [
-                    {
-                        id: 1,
-                        title: "“祝你战无不胜，迈德漠斯”",
-                        updateDate: "2025-03-01",
-                        updateDateISO: "2025-03-01",
-                        category: "serious",
-                        tags: ["3.1玩后感"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2bdff323b",
-                        englishLink: "https://x.com/UryanKarl/status/1895507738068930788",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VZpR8CCqKwe_woRbu7HSEahNTFaEAAC-h0AAi-0QVbzvmKuPwODSDYE.jpg"
-                    },
-                    {
-                        id: 2,
-                        title: "纯蓝",
-                        updateDate: "2025-03-08",
-                        updateDateISO: "2025-03-08",
-                        category: "serious",
-                        tags: ["原曲是COP的《纯蓝》"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be0d4341",
-                        englishLink: "https://x.com/UryanKarl/status/1898323112422433221",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VRpR8B6QgoBdU_3injaK83R__ZX7gAC-B0AAi-0QVZ2yie-SsMXjTYE.jpg"
-                    },
-                    {
-                        id: 3,
-                        title: "“此去恐无归期。我能把后背托付给你们吗？”",
-                        updateDate: "2025-03-09",
-                        updateDateISO: "2025-03-09",
-                        category: "serious",
-                        tags: ["3.1玩后感"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be109a89",
-                        englishLink: "https://x.com/UryanKarl/status/1898760283700809949",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7TxpR7xbjhCodd4HRxBaSyUpaQaLMgAC3h0AAi-0QValdypS1zxIyzYE.jpg"
-                    },
-					
-					{
-                        id: 4,
-                        title: "鼹鼠星穹",
-                        updateDate: "2025-03-10",
-                        updateDateISO: "2025-03-10",
-                        category: "meme",
-                        tags: ["回归一下舒适区","摩尔庄园"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be115045",
-                        englishLink: "https://x.com/UryanKarl/status/1898907637774713333",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VdpR8CG-HjyB1CgKseoyXPk_797GQAC-x0AAi-0QVa5-jWHJafZ_zYE.jpg"
-                    },
-					
-					{
-                        id: 5,
-                        title: "王妃坐",
-                        updateDate: "2025-03-12",
-                        updateDateISO: "2025-03-12",
-                        category: "serious",
-                        tags: ["万敌《走进星穹》"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be14cb90",
-                        englishLink: "https://x.com/UryanKarl/status/1899805137956401311",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VVpR8B9CHkDY4rzw6qJCzG2JrO5ugAC-R0AAi-0QVaPwlMXPn685TYE.jpg"
-                    },
-					{
-                        id: 7,
-                        title: "拥抱",
-                        updateDate: "2025-5-11",
-                        updateDateISO: "2025-5-11",
-                        category: "serious",
-                        tags: ["3.3前瞻观后感"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be809d1e",
-                        englishLink: "https://x.com/UryanKarl/status/1921254055520657744",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7T5pR7yVcrPTtSDlZllsyVMvdSJHYgAC4B0AAi-0QVaS_CvmZlMTfzYE.png"
-                    },
-					{
-                        id: 6,
-                        title: "冥河烈火",
-                        updateDate: "2025-05-17",
-                        updateDateISO: "2025-05-17",
-                        category: "serious",
-                        tags: ["3.2玩后感"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be89a736",
-                        englishLink: "https://x.com/UryanKarl/status/1923658003787677823",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7TtpR7wTpcGrNHsWEM72ZeLKQG5gcAAC2x0AAi-0QVZrAfH9W-CxsjYE.png"
-                    },
-					{
-                        id: 8,
-                        title: "白厄和七美拉",
-                        updateDate: "2025-06-02",
-                        updateDateISO: "2025-06-02",
-                        category: "meme",
-                        tags: ["奇美拉"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2beaa03fa",
-                        englishLink: "https://x.com/UryanKarl/status/1929495025567899741",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VlpR8Dhcf0lGG_IKfqkv9LzxXQd9gAC_R0AAi-0QVakUO6CYrKE-zYE.png"
-                    },
-					{
-                        id: 9,
-                        title: "叠叠乐",
-                        updateDate: "2025-10-21",
-                        updateDateISO: "2025-10-21",
-                        category: "meme",
-                        tags: ["“敌厄”谐音“叠”","让人忍俊不禁"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_34c77bd89",
-                        englishLink: "https://x.com/UryanKarl/status/1980318971477012870",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VxpR8E_T-k2kA1Yad0YrabOexGPPwACAR4AAi-0QVYwWWmpTddIPDYE.jpg"
-                    },
-					{
-                        id: 10,
-                        title: "飞扑",
-                        updateDate: "2025-10-26",
-                        updateDateISO: "2025-10-26",
-                        category: "meme",
-                        tags: ["努努"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_34c80936d",
-                        englishLink: "https://x.com/UryanKarl/status/1982445953882992980",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VtpR8E_W-uX33V0LLJOTlXDopGLZAADHgACL7RBVjMPMq0aCSgXNgQ.jpg"
-                    },
-					{
-                        id: 11,
-                        title: "热血沸腾的组合技",
-                        updateDate: "2025-12-12",
-                        updateDateISO: "2025-12-12",
-                        category: "meme",
-                        tags: ["货币战争"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_34cc98558",
-                        englishLink: "https://x.com/UryanKarl/status/1999411114732573039",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7VppR8E_lY6Cn3RgqVyH4Sg-aU-a4AAC_x0AAi-0QVZ13F936An-FDYE.jpg"
-                    },
-                    {
-                        id: 12,
-                        title: "两拳超人",
-                        updateDate: "2025-12-12",
-                        updateDateISO: "2025-12-12",
-                        category: "meme",
-                        tags: ["货币战争"],
-                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_34cc91e9d",
-                        englishLink: "https://x.com/UryanKarl/status/1999411906310996095",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7V1pR8E_Bd7vffgacOKpLRB977wvkgACAh4AAi-0QVaoieMc5cMn5DYE.jpg"
-                    }
-                ]
+                categoryMeme: "Meme"
             }
         };
 
-        // 当前语言和排序方式
+        // ===================== 2. 全局状态与工具函数 =====================
         let currentLanguage = 'zh';
         let currentSort = 'story';
         let currentCategory = 'all';
 
-        // 初始化网站
-        document.addEventListener('DOMContentLoaded', function() {
-            // 初始化语言切换功能
-            initLanguageSwitcher();
+        // 工具函数：根据作品类型、语言、排序方式获取最终作品列表
+        function getWorksByType(workType, lang) {
+            // 1. 从allWorks中筛选出指定类型的作品
+            let works = allWorks.filter(work => work.type === workType);
             
-            // 初始化排序功能
-            initSortButtons();
-            
-            // 初始化分类筛选功能
-            initCategoryTabs();
-            
-            // 渲染内容
-            renderContent();
-            
-            // 加载置顶视频/封面
-            loadFeaturedContent();
-        });
+            if (works.length === 0) return [];
 
-        // 初始化语言切换功能
-        function initLanguageSwitcher() {
-            const zhBtn = document.getElementById('lang-zh');
-            const enBtn = document.getElementById('lang-en');
-            
-            zhBtn.addEventListener('click', () => {
+            // 2. 为每个作品合并对应语言的翻译和格式化日期
+            works = works.map(work => {
+                const translated = translations[lang] ? translations[lang][work.id] || {} : {};
+                return {
+                    ...work, // 保留所有通用信息
+                    title: translated.title || `[${lang.toUpperCase()} Title Needed]`,
+                    tags: translated.tags || [],
+                    // 格式化日期显示
+                    updateDate: formatDisplayDate(work.updateDateISO, lang)
+                };
+            });
+
+            // 3. 排序逻辑
+            if (workType === 'episode') {
+                if (currentSort === 'story') {
+                    works.sort((a, b) => a.storyOrder - b.storyOrder);
+                } else {
+                    // 按更新日期倒序
+                    works.sort((a, b) => new Date(b.updateDateISO) - new Date(a.updateDateISO));
+                }
+            } else {
+                // 其他类型默认按更新日期倒序
+                works.sort((a, b) => new Date(b.updateDateISO) - new Date(a.updateDateISO));
+            }
+
+            return works;
+        }
+
+        // 工具函数：格式化日期显示
+        function formatDisplayDate(isoString, lang) {
+            if (!isoString) return '';
+            try {
+                const date = new Date(isoString);
+                if (lang === 'zh') {
+                    return `${date.getFullYear()}年${date.getMonth()+1}月${date.getDate()}日`;
+                } else {
+                    return date.toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'short', 
+                        day: 'numeric' 
+                    });
+                }
+            } catch (e) {
+                return isoString;
+            }
+        }
+
+        // ===================== 3. 核心渲染函数 =====================
+        // 通用函数：渲染任何一种作品类型的卡片
+        function renderWorks(workType, containerId, lang) {
+            const container = document.getElementById(containerId);
+            if (!container) {
+                console.error(`容器 #${containerId} 不存在`);
+                return;
+            }
+
+            container.innerHTML = '';
+            const works = getWorksByType(workType, lang);
+
+            // 特殊处理：如果是插画，需要根据当前分类筛选
+            let displayWorks = works;
+            if (workType === 'illustration' && currentCategory !== 'all') {
+                displayWorks = works.filter(work => work.category === currentCategory);
+            }
+
+            if (displayWorks.length === 0) {
+                const emptyMsg = document.createElement('div');
+                emptyMsg.style.textAlign = 'center';
+                emptyMsg.style.padding = '2rem';
+                emptyMsg.style.color = 'var(--stone-gray)';
+                emptyMsg.innerHTML = `<i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                                      <p>${lang === 'zh' ? '当前没有作品' : 'No works yet'}</p>`;
+                container.appendChild(emptyMsg);
+                return;
+            }
+
+            displayWorks.forEach(work => {
+                const card = document.createElement('div');
+                card.className = `${workType}-card`;
+                card.style.cursor = 'pointer';
+
+                // 根据当前语言决定点击后跳转的链接
+                const targetLink = lang === 'zh' ? work.chineseLink : work.englishLink;
+                card.onclick = () => {
+                    if (targetLink && targetLink !== '#' && targetLink !== 'https://example.com') {
+                        window.open(targetLink, '_blank');
+                    }
+                };
+
+                // 根据作品类型决定卡片上显示的小图标和角标文字
+                let typeIcon = 'fa-file';
+                let badgeText = '';
+                let bgGradient = 'linear-gradient(45deg, #2A5C8B, #1a3a5f)';
+                
+                if (work.type === 'episode') {
+                    typeIcon = work.id === 1 ? 'fa-play' : 'fa-film';
+                    badgeText = lang === 'zh' ? `第${work.id}集` : `Episode ${work.id}`;
+                    bgGradient = 'linear-gradient(45deg, #2A5C8B, #1a3a5f)';
+                } else if (work.type === 'illustration') {
+                    typeIcon = work.category === 'serious' ? 'fa-paint-brush' : 'fa-laugh';
+                    badgeText = lang === 'zh' ? 
+                        (work.category === 'serious' ? '严肃向' : '萌系') : 
+                        (work.category === 'serious' ? 'Serious' : 'Meme');
+                    bgGradient = work.category === 'serious' ? 
+                        'linear-gradient(45deg, #8B0000, #5a0000)' : 
+                        'linear-gradient(45deg, #D4AF37, #b8941f)';
+                } else if (work.type === 'research') {
+                    typeIcon = 'fa-search';
+                    badgeText = lang === 'zh' ? '考据' : 'Research';
+                    bgGradient = 'linear-gradient(45deg, #228B22, #1a6b1a)';
+                } else if (work.type === 'skin') {
+                    typeIcon = 'fa-keyboard';
+                    badgeText = lang === 'zh' ? '皮肤' : 'Skin';
+                    bgGradient = 'linear-gradient(45deg, #8A2BE2, #6a1fc2)';
+                }
+
+                // 构建卡片的HTML内容
+                card.innerHTML = `
+                    <div class="card-thumbnail" style="background: ${bgGradient};">
+                        <img src="${work.coverImage}" alt="${work.title}" class="card-cover-image" 
+                             onerror="this.style.display='none'; this.parentNode.innerHTML='<i class=\\'fas ${typeIcon}\\' style=\\'font-size: 3rem;\\'></i>';">
+                        <div class="card-overlay">
+                            <i class="fas ${typeIcon}"></i>
+                        </div>
+                        <div style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.7); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">
+                            ${badgeText}
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${work.title}</h3>
+                        <div class="card-meta">
+                            <span>${lang === 'zh' ? '更新: ' : 'Updated: '}${work.updateDate}</span>
+                            ${work.fileSize ? `<span>${work.fileSize}</span>` : ''}
+                        </div>
+                        <div class="card-tags">
+                            ${work.tags.map(tag => 
+                                `<span class="tag" style="font-size: 0.7rem; padding: 2px 6px; margin: 2px;">${tag}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // ===================== 4. 页面各区块的渲染函数 =====================
+        // 渲染动画
+        function renderEpisodes() {
+            renderWorks('episode', 'episodes-container', currentLanguage);
+        }
+
+        // 渲染插画
+        function renderIllustrations() {
+            renderWorks('illustration', 'illustrations-container', currentLanguage);
+        }
+
+        // 渲染考据视频
+        function renderResearch() {
+            renderWorks('research', 'research-container', currentLanguage);
+        }
+
+        // 渲染皮肤
+        function renderSkins() {
+            renderWorks('skin', 'skin-container', currentLanguage);
+        }
+
+        // 加载并设置置顶内容
+        // 加载并设置置顶内容（自动抓取最新作品信息）
+function loadFeaturedContent() {
+    const container = document.getElementById('featured-video-container');
+    const titleElement = document.getElementById('featured-ep-title');
+    const tagsContainer = document.querySelector('.featured-tags'); // 获取标签容器
+
+    if (!container || !titleElement || !tagsContainer) {
+        console.error('置顶区域的关键元素不存在');
+        return;
+    }
+
+    // 1. 获取所有动画，并按日期倒序排序（最新的在最前面）
+    const episodes = allWorks
+        .filter(work => work.type === 'episode')
+        .sort((a, b) => new Date(b.updateDateISO) - new Date(a.updateDateISO));
+
+    if (episodes.length === 0) {
+        // 如果没有动画作品，显示占位信息
+        container.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#1a1a2e;color:white;flex-direction:column;">
+            <i class="fas fa-video-slash" style="font-size:3rem; margin-bottom:1rem;"></i>
+            <p>${currentLanguage === 'zh' ? '暂无动画作品' : 'No animation available'}</p>
+        </div>`;
+        titleElement.textContent = currentLanguage === 'zh' ? '暂无最新动画' : 'No Latest Animation';
+        tagsContainer.innerHTML = ''; // 清空标签
+        return;
+    }
+
+    const latestEpisode = episodes[0]; // 这就是最新一集
+    const link = currentLanguage === 'zh' ? latestEpisode.chineseLink : latestEpisode.englishLink;
+
+    // 2. 动态抓取当前语言下的标题和标签
+    const currentTranslations = translations[currentLanguage] || {};
+    const episodeTranslation = currentTranslations[latestEpisode.id] || {};
+    
+    const latestTitle = episodeTranslation.title || `[${currentLanguage.toUpperCase()} Title Needed]`;
+    const latestTags = episodeTranslation.tags || [];
+
+    // 3. 更新置顶区域的标题
+    titleElement.textContent = latestTitle;
+
+    // 4. 动态生成并更新标签
+    tagsContainer.innerHTML = ''; // 先清空现有标签
+    latestTags.forEach(tagText => {
+        const tagSpan = document.createElement('span');
+        tagSpan.className = 'tag';
+        tagSpan.textContent = tagText;
+        tagsContainer.appendChild(tagSpan);
+    });
+
+    // 5. 更新视频播放器或封面链接
+    if (currentLanguage === 'zh' && latestEpisode.bvid) {
+        // 中文环境：B站嵌入式播放器
+        container.innerHTML = `
+            <iframe 
+                src="https://player.bilibili.com/player.html?bvid=${latestEpisode.bvid}&high_quality=1&autoplay=0" 
+                width="100%" height="100%" frameborder="0" allowfullscreen
+                scrolling="no" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts allow-popups">
+            </iframe>`;
+    } else {
+        // 英文或其他环境：显示封面图，点击跳转
+        container.innerHTML = `
+            <a href="${link}" target="_blank" style="display: block; width: 100%; height: 100%;">
+                <img src="${latestEpisode.coverImage}" alt="${latestTitle}" class="featured-image-cover" 
+                     onerror="this.onerror=null; this.style.display='none'; this.parentNode.innerHTML='<div style=\"width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#1a1a2e;color:white;\"><i class=\"fas fa-play-circle\" style=\"font-size:4rem;\"></i></div>';">
+                <div class="featured-play-overlay">
+                    <i class="fas fa-play-circle"></i>
+                    <p>${currentLanguage === 'zh' ? '点击观看' : 'Click to watch'}</p>
+                </div>
+            </a>`;
+    }
+}
+
+        // 渲染所有内容（主控制函数）
+        function renderContent() {
+            const text = websiteText[currentLanguage];
+
+            // 更新所有界面文字
+            document.getElementById('site-main-title').textContent = text.siteTitle;
+            document.getElementById('site-subtitle').textContent = text.siteSubtitle;
+            document.getElementById('admin-text').innerHTML = `<strong>${text.adminText}</strong>伊水_Uryan`;
+            document.getElementById('site-description').textContent = text.siteDescription;
+            document.getElementById('footer-title').textContent = text.footerTitle;
+            document.getElementById('footer-description').textContent = text.footerDescription;
+            document.getElementById('footer-copyright').textContent = text.footerCopyright;
+            document.getElementById('featured-title').textContent = text.featuredTitle;
+            document.getElementById('episodes-title').textContent = text.episodesTitle;
+            document.getElementById('illustrations-title').textContent = text.illustrationsTitle;
+            document.getElementById('research-title').textContent = text.researchTitle;
+            document.getElementById('skin-title').textContent = text.skinTitle;
+            document.getElementById('sort-story').textContent = text.sortStory;
+            document.getElementById('sort-update').textContent = text.sortUpdate;
+
+            // 更新分类标签文字
+            document.querySelectorAll('.category-tab').forEach((tab, idx) => {
+                if (idx === 0) tab.textContent = text.categoryAll;
+                else if (idx === 1) tab.textContent = text.categorySerious;
+                else if (idx === 2) tab.textContent = text.categoryMeme;
+            });
+
+            // 渲染所有作品区块
+            renderEpisodes();
+            renderIllustrations();
+            renderResearch();
+            renderSkins();
+            loadFeaturedContent();
+        }
+
+        // ===================== 5. 初始化与事件绑定 =====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // 语言切换
+            document.getElementById('lang-zh').addEventListener('click', () => {
                 if (currentLanguage !== 'zh') {
                     currentLanguage = 'zh';
-                    zhBtn.classList.add('active');
-                    enBtn.classList.remove('active');
+                    document.getElementById('lang-zh').classList.add('active');
+                    document.getElementById('lang-en').classList.remove('active');
                     renderContent();
-                    loadFeaturedContent();
                 }
             });
             
-            enBtn.addEventListener('click', () => {
+            document.getElementById('lang-en').addEventListener('click', () => {
                 if (currentLanguage !== 'en') {
                     currentLanguage = 'en';
-                    enBtn.classList.add('active');
-                    zhBtn.classList.remove('active');
+                    document.getElementById('lang-en').classList.add('active');
+                    document.getElementById('lang-zh').classList.remove('active');
                     renderContent();
-                    loadFeaturedContent();
                 }
             });
-        }
 
-        // 初始化排序功能
-        function initSortButtons() {
-            const storyBtn = document.getElementById('sort-story');
-            const updateBtn = document.getElementById('sort-update');
-            
-            storyBtn.addEventListener('click', () => {
+            // 动画排序切换
+            document.getElementById('sort-story').addEventListener('click', () => {
                 if (currentSort !== 'story') {
                     currentSort = 'story';
-                    storyBtn.classList.add('active');
-                    updateBtn.classList.remove('active');
+                    document.getElementById('sort-story').classList.add('active');
+                    document.getElementById('sort-update').classList.remove('active');
                     renderEpisodes();
                 }
             });
             
-            updateBtn.addEventListener('click', () => {
+            document.getElementById('sort-update').addEventListener('click', () => {
                 if (currentSort !== 'update') {
                     currentSort = 'update';
-                    updateBtn.classList.add('active');
-                    storyBtn.classList.remove('active');
+                    document.getElementById('sort-update').classList.add('active');
+                    document.getElementById('sort-story').classList.remove('active');
                     renderEpisodes();
                 }
             });
-        }
 
-        // 初始化分类筛选功能
-        function initCategoryTabs() {
-            const tabs = document.querySelectorAll('.category-tab');
-            
-            tabs.forEach(tab => {
+            // 插画分类切换
+            document.querySelectorAll('.category-tab').forEach(tab => {
                 tab.addEventListener('click', () => {
-                    // 移除所有标签的active类
-                    tabs.forEach(t => t.classList.remove('active'));
-                    
-                    // 为当前点击的标签添加active类
+                    document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
-                    
-                    // 更新当前分类
                     currentCategory = tab.getAttribute('data-category');
-                    
-                    // 重新渲染插画
                     renderIllustrations();
                 });
             });
-        }
 
-        // 加载置顶内容
-        function loadFeaturedContent() {
-            const container = document.getElementById('featured-video-container');
-            const episodes = websiteData[currentLanguage].episodes;
+            // 初始渲染
+            renderContent();
             
-            // 找到最新的一集（按updateDateISO排序）
-            const latestEpisode = [...episodes].sort((a, b) => 
-                new Date(b.updateDateISO) - new Date(a.updateDateISO)
-            )[0];
-            
-            // 获取当前语言的链接
-            const link = currentLanguage === 'zh' ? latestEpisode.chineseLink : latestEpisode.englishLink;
-            
-            // 如果是中文环境，使用B站嵌入播放器
-            if (currentLanguage === 'zh') {
-                container.innerHTML = `
-                    <iframe 
-                        src="https://player.bilibili.com/player.html?bvid=${latestEpisode.bvid}&high_quality=1&autoplay=0" 
-                        width="100%" 
-                        height="100%" 
-                        frameborder="0" 
-                        allowfullscreen
-                        scrolling="no"
-                        sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts allow-popups">
-                    </iframe>
-                `;
-            } else {
-                // 英文环境，使用图片封面，点击跳转到推特
-                container.innerHTML = `
-                    <a href="${link}" target="_blank" style="display: block; width: 100%; height: 100%;">
-                        <img src="${latestEpisode.coverImage}" alt="${latestEpisode.title}" class="featured-image-cover">
-                        <div class="featured-play-overlay">
-                            <i class="fas fa-play-circle"></i>
-                            <p>Click to watch on X</p>
-                        </div>
-                    </a>
-                `;
-            }
-            
-            // 更新特色视频信息
-            document.getElementById('featured-ep-title').textContent = latestEpisode.title;
-        }
-
-        // 渲染所有内容
-        function renderContent() {
-            const data = websiteData[currentLanguage];
-            
-            // 更新页面标题
-            document.getElementById('site-main-title').textContent = data.siteTitle;
-            document.getElementById('site-subtitle').textContent = data.siteSubtitle;
-            document.getElementById('admin-text').innerHTML = `<strong>${data.adminText}</strong>伊水_Uryan`;
-            document.getElementById('site-description').textContent = data.siteDescription;
-            document.getElementById('footer-title').textContent = data.footerTitle;
-            document.getElementById('footer-description').textContent = data.footerDescription;
-            document.getElementById('footer-copyright').textContent = data.footerCopyright;
-            
-            // 更新各区域标题
-            document.getElementById('featured-title').textContent = data.featuredTitle;
-            document.getElementById('episodes-title').textContent = data.episodesTitle;
-            document.getElementById('illustrations-title').textContent = data.illustrationsTitle;
-            
-            // 更新排序按钮文字
-            document.getElementById('sort-story').textContent = data.sortStory;
-            document.getElementById('sort-update').textContent = data.sortUpdate;
-            
-            // 更新分类标签文字
-            document.querySelectorAll('.category-tab').forEach((tab, index) => {
-                if (index === 0) tab.textContent = data.categoryAll;
-                else if (index === 1) tab.textContent = data.categorySerious;
-                else if (index === 2) tab.textContent = data.categoryMeme;
-            });
-            
-            // 渲染动画和插画
-            renderEpisodes();
-            renderIllustrations();
-        }
-
-        // 渲染动画卡片
-        function renderEpisodes() {
-            const container = document.getElementById('episodes-container');
-            container.innerHTML = '';
-            
-            // 获取当前语言的数据
-            let episodes = [...websiteData[currentLanguage].episodes];
-            
-            // 根据当前排序方式对动画进行排序
-            if (currentSort === 'story') {
-                episodes.sort((a, b) => a.storyOrder - b.storyOrder);
-            } else {
-                // 按更新日期倒序排序（最新的在最前面）
-                episodes.sort((a, b) => new Date(b.updateDateISO) - new Date(a.updateDateISO));
-            }
-            
-            // 生成动画卡片
-            episodes.forEach(episode => {
-                const episodeCard = document.createElement('div');
-                episodeCard.className = 'episode-card';
-                
-                // 设置点击事件，根据当前语言跳转到对应链接
-                const link = currentLanguage === 'zh' ? episode.chineseLink : episode.englishLink;
-                episodeCard.onclick = () => {
-                    if (link && link !== '#') {
-                        window.open(link, '_blank');
-                    }
-                };
-                
-                // 根据集数设置不同的图标
-                const episodeIcon = episode.id === 1 ? 'fa-play' : 
-                                   episode.id === 2 ? 'fa-heart' : 
-                                   'fa-gem';
-                
-                episodeCard.innerHTML = `
-                    <div class="card-thumbnail episode-thumbnail">
-                        <img src="${episode.coverImage}" alt="${episode.title}" class="card-cover-image">
-                        <div class="card-overlay">
-                            <i class="fas ${episodeIcon}"></i>
-                        </div>
-                        <div style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.7); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">
-                            ${currentLanguage === 'zh' ? '第' + episode.id + '集' : 'Episode ' + episode.id}
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">${episode.title}</h3>
-                        <div class="card-meta">
-                            <span>${currentLanguage === 'zh' ? '更新: ' : 'Updated: '}${episode.updateDate}</span>
-                            <span>${currentLanguage === 'zh' ? '故事顺序: ' : 'Story Order: '}${episode.storyOrder}</span>
-                        </div>
-                        <div class="card-tags">
-                            ${episode.tags.map(tag => `<span class="tag" style="font-size: 0.7rem; padding: 2px 6px;">${tag}</span>`).join('')}
-                        </div>
-                    </div>
-                `;
-                
-                container.appendChild(episodeCard);
-            });
-        }
-
-        // 渲染插画卡片
-        function renderIllustrations() {
-            const container = document.getElementById('illustrations-container');
-            container.innerHTML = '';
-            
-            // 获取当前语言的数据
-            let illustrations = [...websiteData[currentLanguage].illustrations];
-            
-            // 根据当前分类筛选插画
-            if (currentCategory !== 'all') {
-                illustrations = illustrations.filter(illustration => illustration.category === currentCategory);
-            }
-            
-            // 按更新时间倒序排序（最新的在前）
-            illustrations.sort((a, b) => new Date(b.updateDateISO) - new Date(a.updateDateISO));
-            
-            // 生成插画卡片
-            illustrations.forEach(illustration => {
-                const illustrationCard = document.createElement('div');
-                illustrationCard.className = 'illustration-card';
-                
-                // 设置点击事件，根据当前语言跳转到对应链接
-                const link = currentLanguage === 'zh' ? illustration.chineseLink : illustration.englishLink;
-                illustrationCard.onclick = () => {
-                    if (link && link !== '#') {
-                        window.open(link, '_blank');
-                    }
-                };
-                
-                // 根据分类设置不同的图标
-                const illustrationIcon = illustration.category === 'serious' ? 'fa-paint-brush' : 'fa-laugh';
-                const categoryText = illustration.category === 'serious' ? 
-                    (currentLanguage === 'zh' ? '严肃向' : 'Serious Art') : 
-                    (currentLanguage === 'zh' ? '萌系' : 'Meme');
-                
-                illustrationCard.innerHTML = `
-                    <div class="card-thumbnail illustration-thumbnail">
-                        <img src="${illustration.coverImage}" alt="${illustration.title}" class="card-cover-image">
-                        <div class="card-overlay">
-                            <i class="fas ${illustrationIcon}"></i>
-                        </div>
-                        <div style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.7); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">
-                            ${categoryText}
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">${illustration.title}</h3>
-                        <div class="card-meta">
-                            <span>${currentLanguage === 'zh' ? '更新: ' : 'Updated: '}${illustration.updateDate}</span>
-                        </div>
-                        <div class="card-tags">
-                            ${illustration.tags.map(tag => `<span class="tag" style="font-size: 0.7rem; padding: 2px 6px;">${tag}</span>`).join('')}
-                        </div>
-                    </div>
-                `;
-                
-                container.appendChild(illustrationCard);
-            });
-            
-            // 如果没有插画，显示提示信息
-            if (illustrations.length === 0) {
-                const emptyMessage = document.createElement('div');
-                emptyMessage.style.textAlign = 'center';
-                emptyMessage.style.padding = '1.5rem';
-                emptyMessage.style.color = 'var(--stone-gray)';
-                emptyMessage.innerHTML = `<i class="fas fa-search" style="font-size: 1.8rem; margin-bottom: 0.8rem;"></i>
-                                         <p>${currentLanguage === 'zh' ? '当前分类下暂无作品' : 'No works in this category'}</p>`;
-                container.appendChild(emptyMessage);
-            }
-        }
+            // 确保所有卡片都能正常显示
+            setTimeout(() => {
+                renderEpisodes();
+                renderIllustrations();
+                renderResearch();
+                renderSkins();
+            }, 100);
+        });
     </script>
 </body>
 </html>
