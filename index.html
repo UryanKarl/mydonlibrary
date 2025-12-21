@@ -31,6 +31,7 @@
             color: #333;
             line-height: 1.6;
             -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
         }
 
         /* 触摸设备专用样式 */
@@ -67,10 +68,15 @@
             z-index: 1000;
         }
 
+        /* Logo容器 - 改为可点击的导航触发器 */
         .logo-container {
             display: flex;
             align-items: center;
             gap: 15px;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+            z-index: 1002; /* 确保logo容器在菜单之上 */
         }
 
         .logo {
@@ -85,6 +91,17 @@
             font-size: 24px;
             border: 3px solid var(--primary-gold);
             box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
+        }
+
+        .logo.active {
+            background-color: var(--primary-gold);
+            border-color: var(--primary-blue);
         }
 
         .site-title h1 {
@@ -100,9 +117,83 @@
             font-size: 0.9rem;
         }
 
+        /* 隐藏导航菜单 - 提高z-index确保在最上层 */
+        .nav-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 280px;
+            background-color: var(--primary-white);
+            border: 2px solid var(--primary-gold);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1100; /* 提高z-index确保在最上层 */
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .nav-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-menu::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 30px;
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary-white);
+            border-left: 2px solid var(--primary-gold);
+            border-top: 2px solid var(--primary-gold);
+            transform: rotate(45deg);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.2rem;
+            color: var(--primary-blue);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:last-child {
+            border-bottom: none;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+            padding-left: 1.5rem;
+            color: var(--primary-red);
+        }
+
+        .nav-item i {
+            margin-right: 12px;
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+            color: var(--primary-gold);
+        }
+
+        .nav-item.active {
+            background-color: rgba(212, 175, 55, 0.15);
+            color: var(--primary-red);
+            font-weight: bold;
+            border-left: 4px solid var(--primary-red);
+        }
+
         .language-switcher {
             display: flex;
             gap: 5px;
+            z-index: 1001; /* 降低语言切换器的z-index，确保菜单在它上面 */
         }
 
         .lang-btn {
@@ -140,6 +231,11 @@
             max-width: var(--column-width);
             margin: 0 auto;
             padding: 1.5rem;
+        }
+
+        /* 为各个区块添加ID用于滚动定位 */
+        #featured, #episodes, #illustrations, #research, #skin {
+            scroll-margin-top: 100px;
         }
 
         /* 特色展示区 */
@@ -482,10 +578,12 @@
         /* 移动端专属优化 (屏幕宽度小于768px时生效) */
         @media (max-width: 768px) {
             header {
-                padding: 0.8rem 1rem;
+                padding: 0.2rem 1rem;
                 flex-direction: column;
-                gap: 0.8rem;
-                position: relative;
+                gap: 0.2rem;
+        position: sticky; /* 将relative改为sticky */
+        top: 0; /* 确保sticky定位生效 */
+                z-index: 1000; /* 确保header有z-index */
             }
 
             .logo-container {
@@ -494,6 +592,8 @@
                 gap: 12px;
                 flex-wrap: nowrap;
                 overflow: hidden;
+                position: relative;
+                z-index: 1002; /* 确保logo容器在菜单之上 */
             }
 
             .logo {
@@ -525,17 +625,16 @@
             .admin-info {
                 width: 100%;
                 text-align: left;
-                font-size: 0.8rem;
+                font-size: 0.7rem;
                 order: 3;
-                padding-top: 0.5rem;
-                border-top: 1px solid rgba(212, 175, 55, 0.3);
+                padding-top: 0.2rem;
             }
 
             .language-switcher {
                 position: absolute;
-                top: 5.8rem;
+                top: 3.8rem;
                 right: 1rem;
-                z-index: 1001;
+                z-index: 999; /* 降低语言切换器的z-index，确保菜单在它上面 */
             }
 
             .lang-btn {
@@ -668,6 +767,23 @@
                 justify-content: flex-start;
             }
             
+            /* 移动端导航菜单优化 - 确保在最上层 */
+            .nav-menu {
+                position: fixed; /* 改为fixed定位，确保在viewport内 */
+                top: 50px; /* 根据header高度调整 */
+                left: 10px;
+                right: 10px;
+                width: 220px; /* 自适应宽度 */
+                z-index: 1100; /* 确保在最上层 */
+                max-height: calc(100vh - 80px); /* 限制最大高度 */
+                overflow-y: auto; /* 如果内容过多可以滚动 */
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .nav-menu::before {
+                left: 20px; /* 调整三角形位置 */
+            }
+            
             /* 页脚优化 */
             footer {
                 padding: 1rem;
@@ -701,20 +817,56 @@
                 .featured-video {
                     height: 180px;
                 }
+                
+                .nav-menu {
+                    left: 5px;
+                    right: 5px;
+                    top: 65px;
+                }
             }
+        }
+        
+        /* 防止滚动穿透 - 当导航菜单打开时阻止body滚动 */
+        body.no-scroll {
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
     <!-- 顶部导航栏 -->
     <header>
-        <div class="logo-container">
-            <div class="logo">
+        <!-- 修改后的Logo容器，现在包含隐藏导航菜单 -->
+        <div class="logo-container" id="nav-trigger">
+            <div class="logo" id="nav-logo">
                 <i class="fas fa-book"></i>
             </div>
             <div class="site-title">
                 <h1 id="site-main-title">拥抱黎明的图书馆</h1>
                 <p id="site-subtitle">Library of MyDawn</p>
+            </div>
+            
+            <!-- 隐藏导航菜单 -->
+            <div class="nav-menu" id="nav-menu">
+                <a class="nav-item" href="#featured" data-section="featured">
+                    <i class="fas fa-star"></i>
+                    <span id="nav-featured">最新动画</span>
+                </a>
+                <a class="nav-item" href="#episodes" data-section="episodes">
+                    <i class="fas fa-film"></i>
+                    <span id="nav-episodes">图书馆的影音库</span>
+                </a>
+                <a class="nav-item" href="#illustrations" data-section="illustrations">
+                    <i class="fas fa-palette"></i>
+                    <span id="nav-illustrations">图书馆的藏画阁</span>
+                </a>
+                <a class="nav-item" href="#research" data-section="research">
+                    <i class="fas fa-search"></i>
+                    <span id="nav-research">图书馆的考据室</span>
+                </a>
+                <a class="nav-item" href="#skin" data-section="skin">
+                    <i class="fas fa-keyboard"></i>
+                    <span id="nav-skin">图书馆的文具盒</span>
+                </a>
             </div>
         </div>
         
@@ -731,8 +883,8 @@
     
     <!-- 主要内容区域 -->
     <div class="container">
-        <!-- 特色展示区 -->
-        <section class="featured-section">
+        <!-- 特色展示区 - 添加ID -->
+        <section class="featured-section" id="featured">
             <div class="section-title">
                 <i class="fas fa-star section-icon"></i>
                 <h2 id="featured-title">最新动画</h2>
@@ -754,8 +906,8 @@
             </div>
         </section>
         
-        <!-- 动画陈列区 -->
-        <section class="episodes-section">
+        <!-- 动画陈列区 - 添加ID -->
+        <section class="episodes-section" id="episodes">
             <div class="section-header">
                 <div class="section-title">
                     <i class="fas fa-film section-icon"></i>
@@ -772,12 +924,12 @@
             </div>
         </section>
         
-        <!-- 插画陈列区 -->
-        <section class="illustrations-section">
+        <!-- 插画陈列区 - 添加ID -->
+        <section class="illustrations-section" id="illustrations">
             <div class="section-header">
                 <div class="section-title">
                     <i class="fas fa-palette section-icon"></i>
-                    <h2 id="illustrations-title">图书馆的藏画馆</h2>
+                    <h2 id="illustrations-title">图书馆的藏画阁</h2>
                 </div>
             </div>
             
@@ -792,8 +944,8 @@
             </div>
         </section>
         
-        <!-- 考据视频区 -->
-        <section class="research-section">
+        <!-- 考据视频区 - 添加ID -->
+        <section class="research-section" id="research">
             <div class="section-header">
                 <div class="section-title">
                     <i class="fas fa-search section-icon"></i>
@@ -805,12 +957,12 @@
             </div>
         </section>
         
-        <!-- 输入法皮肤区 -->
-        <section class="skin-section">
+        <!-- 输入法皮肤区 - 添加ID -->
+        <section class="skin-section" id="skin">
             <div class="section-header">
                 <div class="section-title">
                     <i class="fas fa-keyboard section-icon"></i>
-                    <h2 id="skin-title">图书馆的文具阁</h2>
+                    <h2 id="skin-title">图书馆的文具盒</h2>
                 </div>
             </div>
             <div class="skin-grid" id="skin-container">
@@ -1103,14 +1255,20 @@
                 footerCopyright: "© 2025 拥抱黎明的图书馆 | 本网站为Uryan的崩铁翁星同人收集网站",
                 featuredTitle: "最新动画",
                 episodesTitle: "图书馆的影音库",
-                illustrationsTitle: "图书馆的藏画馆",
+                illustrationsTitle: "图书馆的藏画阁",
                 researchTitle: "图书馆的考据室",
-                skinTitle: "图书馆的文具阁",
+                skinTitle: "图书馆的文具盒",
                 sortStory: "按故事发展顺序",
                 sortUpdate: "按最近更新",
                 categoryAll: "全部",
                 categorySerious: "严肃向",
-                categoryMeme: "萌系"
+                categoryMeme: "萌系",
+                // 新增导航菜单文本
+                navFeatured: "最新动画",
+                navEpisodes: "图书馆的影音库",
+                navIllustrations: "图书馆的藏画阁",
+                navResearch: "图书馆的考据室",
+                navSkin: "图书馆的文具盒"
             },
             'en': {
                 siteTitle: "Library of MyDawn",
@@ -1129,7 +1287,13 @@
                 sortUpdate: "By Latest Update",
                 categoryAll: "All",
                 categorySerious: "Serious Art",
-                categoryMeme: "Meme"
+                categoryMeme: "Meme",
+                // 新增导航菜单文本
+                navFeatured: "Latest Animation",
+                navEpisodes: "Library's Video Archive",
+                navIllustrations: "Library's Art Gallery",
+                navResearch: "Library's Research Room",
+                navSkin: "Library's Stationery"
             }
         };
 
@@ -1137,6 +1301,7 @@
         let currentLanguage = 'zh';
         let currentSort = 'story';
         let currentCategory = 'all';
+        let isNavMenuOpen = false; // 导航菜单状态
 
         // 工具函数：根据作品类型、语言、排序方式获取最终作品列表
         function getWorksByType(workType, lang) {
@@ -1410,6 +1575,13 @@
                 else if (idx === 2) tab.textContent = text.categoryMeme;
             });
 
+            // 更新导航菜单文字
+            document.getElementById('nav-featured').textContent = text.navFeatured;
+            document.getElementById('nav-episodes').textContent = text.navEpisodes;
+            document.getElementById('nav-illustrations').textContent = text.navIllustrations;
+            document.getElementById('nav-research').textContent = text.navResearch;
+            document.getElementById('nav-skin').textContent = text.navSkin;
+
             // 渲染所有作品区块
             renderEpisodes();
             renderIllustrations();
@@ -1418,9 +1590,130 @@
             loadFeaturedContent();
         }
 
-        // ===================== 5. 初始化与事件绑定 =====================
+        // ===================== 5. 导航菜单功能 =====================
+        function setupNavigation() {
+            const navTrigger = document.getElementById('nav-trigger');
+            const navMenu = document.getElementById('nav-menu');
+            const navLogo = document.getElementById('nav-logo');
+            const navItems = document.querySelectorAll('.nav-item');
+
+            // 切换导航菜单显示/隐藏
+            function toggleNavMenu() {
+                isNavMenuOpen = !isNavMenuOpen;
+                navMenu.classList.toggle('active', isNavMenuOpen);
+                navLogo.classList.toggle('active', isNavMenuOpen);
+                
+                // 防止滚动穿透 - 移动端菜单打开时禁止body滚动
+                if (isNavMenuOpen) {
+                    document.body.classList.add('no-scroll');
+                } else {
+                    document.body.classList.remove('no-scroll');
+                }
+            }
+
+            // 关闭导航菜单
+            function closeNavMenu() {
+                isNavMenuOpen = false;
+                navMenu.classList.remove('active');
+                navLogo.classList.remove('active');
+                document.body.classList.remove('no-scroll');
+            }
+
+            // 点击Logo切换导航菜单
+            navTrigger.addEventListener('click', function(e) {
+                e.stopPropagation(); // 阻止事件冒泡
+                toggleNavMenu();
+            });
+
+            // 点击导航菜单项
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 获取目标section的ID
+                    const targetId = this.getAttribute('href');
+                    
+                    // 滚动到对应section
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                    // 关闭导航菜单
+                    closeNavMenu();
+                    
+                    // 高亮当前选中的导航项
+                    navItems.forEach(navItem => navItem.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                });
+            });
+
+            // 点击页面其他地方关闭导航菜单
+            document.addEventListener('click', function(e) {
+                if (!navTrigger.contains(e.target) && isNavMenuOpen) {
+                    closeNavMenu();
+                }
+            });
+
+            // ESC键关闭导航菜单
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isNavMenuOpen) {
+                    closeNavMenu();
+                }
+            });
+
+            // 滚动时更新导航高亮
+            function updateNavHighlight() {
+                const sections = ['featured', 'episodes', 'illustrations', 'research', 'skin'];
+                const scrollPosition = window.scrollY + 100; // 加上header高度
+
+                // 找到当前可见的section
+                let currentSection = '';
+                for (const sectionId of sections) {
+                    const section = document.getElementById(sectionId);
+                    if (section) {
+                        const sectionTop = section.offsetTop;
+                        const sectionHeight = section.offsetHeight;
+                        
+                        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                            currentSection = sectionId;
+                            break;
+                        }
+                    }
+                }
+
+                // 如果没有完全可见的section，找到最近的一个
+                if (!currentSection) {
+                    let minDistance = Infinity;
+                    for (const sectionId of sections) {
+                        const section = document.getElementById(sectionId);
+                        if (section) {
+                            const sectionTop = section.offsetTop;
+                            const distance = Math.abs(scrollPosition - sectionTop);
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                currentSection = sectionId;
+                            }
+                        }
+                    }
+                }
+
+                // 更新导航项高亮
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('href') === `#${currentSection}`) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+
+            // 滚动时更新导航高亮
+            window.addEventListener('scroll', updateNavHighlight);
+        }
+
+        // ===================== 6. 初始化与事件绑定 =====================
         document.addEventListener('DOMContentLoaded', function() {
-            // ===================== 6. 触摸设备优化 =====================
+            // ===================== 6.1 触摸设备优化 =====================
             // 检测是否为触摸设备
             function isTouchDevice() {
                 return 'ontouchstart' in window || 
@@ -1449,6 +1742,9 @@
                     });
                 });
             }
+
+            // 初始化导航菜单
+            setupNavigation();
 
             // 语言切换
             document.getElementById('lang-zh').addEventListener('click', () => {
