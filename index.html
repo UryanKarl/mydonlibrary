@@ -30,6 +30,27 @@
             background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23e8d9b5' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
             color: #333;
             line-height: 1.6;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 触摸设备专用样式 */
+        .touch-device .episode-card:hover,
+        .touch-device .illustration-card:hover,
+        .touch-device .research-card:hover,
+        .touch-device .skin-card:hover {
+            transform: none; /* 触摸设备移除悬浮动画 */
+        }
+
+        .touch-device .touch-active {
+            background-color: rgba(212, 175, 55, 0.1);
+            transform: scale(0.98);
+        }
+
+        /* 提高触摸目标的最小高度 */
+        .touch-device .sort-btn,
+        .touch-device .category-tab,
+        .touch-device .lang-btn {
+            min-height: 36px;
         }
 
         /* 顶部导航栏 */
@@ -94,6 +115,7 @@
             cursor: pointer;
             transition: all 0.3s;
             font-size: 0.9rem;
+            min-height: 36px;
         }
 
         .lang-btn:hover {
@@ -261,6 +283,7 @@
             cursor: pointer;
             transition: all 0.3s;
             font-size: 0.9rem;
+            min-height: 36px;
         }
 
         .sort-btn:hover {
@@ -288,6 +311,8 @@
             transition: transform 0.3s, box-shadow 0.3s;
             background-color: var(--parchment);
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .episode-card:hover, .illustration-card:hover, .research-card:hover, .skin-card:hover {
@@ -389,6 +414,7 @@
             cursor: pointer;
             transition: all 0.3s;
             font-size: 0.9rem;
+            min-height: 36px;
         }
 
         .category-tab:hover {
@@ -422,7 +448,7 @@
             color: #ddd;
         }
 
-        /* 响应式设计 */
+        /* 响应式设计 - 桌面端 */
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
@@ -452,117 +478,231 @@
                 text-align: center;
             }
         }
-		/* 移动端专属优化 (屏幕宽度小于768px时生效) */
-@media (max-width: 768px) {
-    header {
-        padding: 0.5rem 1rem; /* 减少内边距 */
-        flex-direction: column; /* 改为垂直堆叠 */
-        gap: 0.5rem; /* 减少元素间距 */
-    }
+        
+        /* 移动端专属优化 (屏幕宽度小于768px时生效) */
+        @media (max-width: 768px) {
+            header {
+                padding: 0.8rem 1rem;
+                flex-direction: column;
+                gap: 0.8rem;
+                position: relative;
+            }
 
-    .logo-container {
-        width: 100%;
-        justify-content: left; /* 居中对齐logo和标题 */
-        gap: 10px;
-    }
+            .logo-container {
+                width: 100%;
+                justify-content: flex-start;
+                gap: 12px;
+                flex-wrap: nowrap;
+                overflow: hidden;
+            }
 
-    .logo {
-        width: 40px; /* 缩小logo */
-        height: 40px;
-        font-size: 18px;
-    }
+            .logo {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+                flex-shrink: 0;
+            }
 
-    .site-title h1 {
-        font-size: 1.4rem; /* 缩小主标题 */
-    }
+            .site-title {
+                flex: 1;
+                min-width: 0;
+            }
 
-    .site-title p {
-        font-size: 0.75rem; /* 缩小副标题 */
-    }
+            .site-title h1 {
+                font-size: 1.3rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
 
-    .admin-info {
-        width: 100%;
-        text-align: center; /* 管理员信息居中 */
-        font-size: 0.75rem;
-        order: 3; /* 调整显示顺序到最后 */
-    }
+            .site-title p {
+                font-size: 0.8rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
 
-    .language-switcher {
-        position: absolute; /* 将语言切换器移到右上角 */
-        top: 1rem;
-        right: 1rem;
-    }
+            .admin-info {
+                width: 100%;
+                text-align: center;
+                font-size: 0.8rem;
+                order: 3;
+                padding-top: 0.5rem;
+                border-top: 1px solid rgba(212, 175, 55, 0.3);
+            }
 
-    .lang-btn {
-        padding: 4px 8px; /* 缩小按钮 */
-        font-size: 0.8rem;
-    }
+            .language-switcher {
+                position: absolute;
+                top: 0.8rem;
+                right: 1rem;
+                z-index: 1001;
+            }
 
-    /* 同时也可以微调一下主要内容区的上边距 */
-    .container {
-        padding-top: 0.8rem;
-    }
-	    /* === 新增：卡片布局优化 === */
-    /* 将所有网格布局改为一行两列 */
-    .episodes-grid,
-    .illustrations-grid,
-    .research-grid,
-    .skin-grid {
-        grid-template-columns: repeat(2, 1fr); /* 强制一行两列 */
-        gap: 0.8rem; /* 缩小卡片间距 */
-    }
+            .lang-btn {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+                min-width: 60px;
+            }
 
-    /* 缩小卡片整体尺寸 */
-    .episode-card,
-    .illustration-card,
-    .research-card,
-    .skin-card {
-        transform: none; /* 移动端可移除悬浮动画以节省性能 */
-    }
-
-    /* 缩小卡片封面图高度 */
-    .card-thumbnail {
-        height: 100px; /* 原为150px */
-    }
-
-    /* 缩小卡片内部文字 */
-    .card-content {
-        padding: 0.6rem;
-    }
-
-    .card-title {
-        font-size: 0.95rem; /* 原为1.1rem */
-        min-height: 2.4rem; /* 调整最小高度 */
-        margin-bottom: 0.3rem;
-    }
-
-    .card-meta {
-        font-size: 0.7rem; /* 原为0.8rem */
-        margin-bottom: 0.4rem;
-    }
-
-    /* 缩小标签尺寸 */
-    .card-tags .tag {
-        font-size: 0.6rem; /* 原为0.7rem */
-        padding: 1px 4px; /* 原为2px 6px */
-        margin: 1px;
-    }
-
-    /* 缩小卡片角标（如“第1集”） */
-    .card-thumbnail > div:last-child {
-        font-size: 0.7rem;
-        padding: 1px 4px;
-        bottom: 4px;
-        right: 4px;
-    }
-
-    /* === 可选：如果您觉得两列时卡片信息过于拥挤，可以启用此样式隐藏标签 === */
-    /*
-    .card-tags {
-        display: none;
-    }
-    */
-}
+            /* 调整主要内容区的上边距 */
+            .container {
+                padding: 0.8rem;
+            }
+            
+            /* 视频区域优化 */
+            .featured-video {
+                height: 200px;
+            }
+            
+            /* 卡片网格布局优化 - 一行两列但间距更小 */
+            .episodes-grid,
+            .illustrations-grid,
+            .research-grid,
+            .skin-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.6rem;
+            }
+            
+            /* 改善卡片触摸体验 */
+            .episode-card,
+            .illustration-card,
+            .research-card,
+            .skin-card {
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+            
+            /* 激活状态，提供更好的触摸反馈 */
+            .episode-card:active,
+            .illustration-card:active,
+            .research-card:active,
+            .skin-card:active {
+                transform: scale(0.98);
+            }
+            
+            /* 缩小卡片封面图高度 */
+            .card-thumbnail {
+                height: 110px;
+            }
+            
+            /* 优化卡片内部文字 */
+            .card-content {
+                padding: 0.5rem;
+            }
+            
+            .card-title {
+                font-size: 0.9rem;
+                min-height: 2.2rem;
+                margin-bottom: 0.3rem;
+                line-height: 1.3;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .card-meta {
+                font-size: 0.7rem;
+                margin-bottom: 0.3rem;
+                flex-wrap: wrap;
+            }
+            
+            /* 优化标签显示，移动端隐藏部分标签以避免拥挤 */
+            .card-tags {
+                max-height: 1.5rem;
+                overflow: hidden;
+            }
+            
+            .card-tags .tag {
+                font-size: 0.6rem;
+                padding: 2px 5px;
+                margin: 1px;
+                line-height: 1.2;
+            }
+            
+            /* 部分卡片标签过多时可以隐藏一些 */
+            .card-tags .tag:nth-child(n+3) {
+                display: none;
+            }
+            
+            /* 分类标签按钮优化 */
+            .category-tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 5px;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .category-tab {
+                padding: 8px 12px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+            
+            /* 排序按钮优化 */
+            .sort-buttons {
+                width: 100%;
+                justify-content: center;
+                margin-top: 0.5rem;
+            }
+            
+            .sort-btn {
+                padding: 8px 12px;
+                flex: 1;
+                text-align: center;
+                min-width: 0;
+            }
+            
+            /* 特色区域优化 */
+            .featured-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .featured-title {
+                font-size: 1.1rem;
+            }
+            
+            .featured-tags {
+                justify-content: flex-start;
+            }
+            
+            /* 页脚优化 */
+            footer {
+                padding: 1rem;
+            }
+            
+            footer .logo {
+                width: 40px;
+                height: 40px;
+                margin: 0 auto 0.5rem;
+            }
+            
+            /* 极窄屏幕的进一步优化 (宽度小于400px) */
+            @media (max-width: 400px) {
+                .episodes-grid,
+                .illustrations-grid,
+                .research-grid,
+                .skin-grid {
+                    grid-template-columns: 1fr;
+                }
+                
+                .site-title h1 {
+                    font-size: 1.1rem;
+                }
+                
+                .lang-btn {
+                    min-width: 50px;
+                    padding: 5px 8px;
+                    font-size: 0.8rem;
+                }
+                
+                .featured-video {
+                    height: 180px;
+                }
+            }
+        }
     </style>
 </head>
 <body>
@@ -967,7 +1107,7 @@
                 researchTitle: "图书馆的考据室",
                 skinTitle: "图书馆的文具阁",
                 sortStory: "按故事发展顺序",
-                sortUpdate: "按最新更新",
+                sortUpdate: "按最近更新",
                 categoryAll: "全部",
                 categorySerious: "严肃向",
                 categoryMeme: "萌系"
@@ -986,7 +1126,7 @@
                 researchTitle: "Library's Research Room",
                 skinTitle: "Library's Stationery",
                 sortStory: "By Story Order",
-                sortUpdate: "By Update Date",
+                sortUpdate: "By Latest Update",
                 categoryAll: "All",
                 categorySerious: "Serious Art",
                 categoryMeme: "Meme"
@@ -1171,78 +1311,77 @@
             renderWorks('skin', 'skin-container', currentLanguage);
         }
 
-        // 加载并设置置顶内容
         // 加载并设置置顶内容（自动抓取最新作品信息）
-function loadFeaturedContent() {
-    const container = document.getElementById('featured-video-container');
-    const titleElement = document.getElementById('featured-ep-title');
-    const tagsContainer = document.querySelector('.featured-tags'); // 获取标签容器
+        function loadFeaturedContent() {
+            const container = document.getElementById('featured-video-container');
+            const titleElement = document.getElementById('featured-ep-title');
+            const tagsContainer = document.querySelector('.featured-tags'); // 获取标签容器
 
-    if (!container || !titleElement || !tagsContainer) {
-        console.error('置顶区域的关键元素不存在');
-        return;
-    }
+            if (!container || !titleElement || !tagsContainer) {
+                console.error('置顶区域的关键元素不存在');
+                return;
+            }
 
-    // 1. 获取所有动画，并按日期倒序排序（最新的在最前面）
-    const episodes = allWorks
-        .filter(work => work.type === 'episode')
-        .sort((a, b) => new Date(b.updateDateISO) - new Date(a.updateDateISO));
+            // 1. 获取所有动画，并按日期倒序排序（最新的在最前面）
+            const episodes = allWorks
+                .filter(work => work.type === 'episode')
+                .sort((a, b) => new Date(b.updateDateISO) - new Date(a.updateDateISO));
 
-    if (episodes.length === 0) {
-        // 如果没有动画作品，显示占位信息
-        container.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#1a1a2e;color:white;flex-direction:column;">
-            <i class="fas fa-video-slash" style="font-size:3rem; margin-bottom:1rem;"></i>
-            <p>${currentLanguage === 'zh' ? '暂无动画作品' : 'No animation available'}</p>
-        </div>`;
-        titleElement.textContent = currentLanguage === 'zh' ? '暂无最新动画' : 'No Latest Animation';
-        tagsContainer.innerHTML = ''; // 清空标签
-        return;
-    }
+            if (episodes.length === 0) {
+                // 如果没有动画作品，显示占位信息
+                container.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#1a1a2e;color:white;flex-direction:column;">
+                    <i class="fas fa-video-slash" style="font-size:3rem; margin-bottom:1rem;"></i>
+                    <p>${currentLanguage === 'zh' ? '暂无动画作品' : 'No animation available'}</p>
+                </div>`;
+                titleElement.textContent = currentLanguage === 'zh' ? '暂无最新动画' : 'No Latest Animation';
+                tagsContainer.innerHTML = ''; // 清空标签
+                return;
+            }
 
-    const latestEpisode = episodes[0]; // 这就是最新一集
-    const link = currentLanguage === 'zh' ? latestEpisode.chineseLink : latestEpisode.englishLink;
+            const latestEpisode = episodes[0]; // 这就是最新一集
+            const link = currentLanguage === 'zh' ? latestEpisode.chineseLink : latestEpisode.englishLink;
 
-    // 2. 动态抓取当前语言下的标题和标签
-    const currentTranslations = translations[currentLanguage] || {};
-    const episodeTranslation = currentTranslations[latestEpisode.id] || {};
-    
-    const latestTitle = episodeTranslation.title || `[${currentLanguage.toUpperCase()} Title Needed]`;
-    const latestTags = episodeTranslation.tags || [];
+            // 2. 动态抓取当前语言下的标题和标签
+            const currentTranslations = translations[currentLanguage] || {};
+            const episodeTranslation = currentTranslations[latestEpisode.id] || {};
+            
+            const latestTitle = episodeTranslation.title || `[${currentLanguage.toUpperCase()} Title Needed]`;
+            const latestTags = episodeTranslation.tags || [];
 
-    // 3. 更新置顶区域的标题
-    titleElement.textContent = latestTitle;
+            // 3. 更新置顶区域的标题
+            titleElement.textContent = latestTitle;
 
-    // 4. 动态生成并更新标签
-    tagsContainer.innerHTML = ''; // 先清空现有标签
-    latestTags.forEach(tagText => {
-        const tagSpan = document.createElement('span');
-        tagSpan.className = 'tag';
-        tagSpan.textContent = tagText;
-        tagsContainer.appendChild(tagSpan);
-    });
+            // 4. 动态生成并更新标签
+            tagsContainer.innerHTML = ''; // 先清空现有标签
+            latestTags.forEach(tagText => {
+                const tagSpan = document.createElement('span');
+                tagSpan.className = 'tag';
+                tagSpan.textContent = tagText;
+                tagsContainer.appendChild(tagSpan);
+            });
 
-    // 5. 更新视频播放器或封面链接
-    if (currentLanguage === 'zh' && latestEpisode.bvid) {
-        // 中文环境：B站嵌入式播放器
-        container.innerHTML = `
-            <iframe 
-                src="https://player.bilibili.com/player.html?bvid=${latestEpisode.bvid}&high_quality=1&autoplay=0" 
-                width="100%" height="100%" frameborder="0" allowfullscreen
-                scrolling="no" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts allow-popups">
-            </iframe>`;
-    } else {
-        // 英文或其他环境：显示封面图，点击跳转
-        container.innerHTML = `
-            <a href="${link}" target="_blank" style="display: block; width: 100%; height: 100%;">
-                <img src="${latestEpisode.coverImage}" alt="${latestTitle}" class="featured-image-cover" 
-                     onerror="this.onerror=null; this.style.display='none'; this.parentNode.innerHTML='<div style=\"width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#1a1a2e;color:white;\"><i class=\"fas fa-play-circle\" style=\"font-size:4rem;\"></i></div>';">
-                <div class="featured-play-overlay">
-                    <i class="fas fa-play-circle"></i>
-                    <p>${currentLanguage === 'zh' ? '点击观看' : 'Click to watch'}</p>
-                </div>
-            </a>`;
-    }
-}
+            // 5. 更新视频播放器或封面链接
+            if (currentLanguage === 'zh' && latestEpisode.bvid) {
+                // 中文环境：B站嵌入式播放器
+                container.innerHTML = `
+                    <iframe 
+                        src="https://player.bilibili.com/player.html?bvid=${latestEpisode.bvid}&high_quality=1&autoplay=0" 
+                        width="100%" height="100%" frameborder="0" allowfullscreen
+                        scrolling="no" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts allow-popups">
+                    </iframe>`;
+            } else {
+                // 英文或其他环境：显示封面图，点击跳转
+                container.innerHTML = `
+                    <a href="${link}" target="_blank" style="display: block; width: 100%; height: 100%;">
+                        <img src="${latestEpisode.coverImage}" alt="${latestTitle}" class="featured-image-cover" 
+                             onerror="this.onerror=null; this.style.display='none'; this.parentNode.innerHTML='<div style=\"width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#1a1a2e;color:white;\"><i class=\"fas fa-play-circle\" style=\"font-size:4rem;\"></i></div>';">
+                        <div class="featured-play-overlay">
+                            <i class="fas fa-play-circle"></i>
+                            <p>${currentLanguage === 'zh' ? '点击观看' : 'Click to watch'}</p>
+                        </div>
+                    </a>`;
+            }
+        }
 
         // 渲染所有内容（主控制函数）
         function renderContent() {
@@ -1281,6 +1420,36 @@ function loadFeaturedContent() {
 
         // ===================== 5. 初始化与事件绑定 =====================
         document.addEventListener('DOMContentLoaded', function() {
+            // ===================== 6. 触摸设备优化 =====================
+            // 检测是否为触摸设备
+            function isTouchDevice() {
+                return 'ontouchstart' in window || 
+                       navigator.maxTouchPoints > 0 || 
+                       navigator.msMaxTouchPoints > 0;
+            }
+
+            // 如果检测到触摸设备，添加相关优化类
+            if (isTouchDevice()) {
+                document.body.classList.add('touch-device');
+                
+                // 修改卡片悬停效果，使触摸设备上也有视觉反馈
+                document.querySelectorAll('.episode-card, .illustration-card, .research-card, .skin-card').forEach(card => {
+                    card.addEventListener('touchstart', function() {
+                        this.classList.add('touch-active');
+                    });
+                    
+                    card.addEventListener('touchend', function() {
+                        setTimeout(() => {
+                            this.classList.remove('touch-active');
+                        }, 200);
+                    });
+                    
+                    card.addEventListener('touchcancel', function() {
+                        this.classList.remove('touch-active');
+                    });
+                });
+            }
+
             // 语言切换
             document.getElementById('lang-zh').addEventListener('click', () => {
                 if (currentLanguage !== 'zh') {
