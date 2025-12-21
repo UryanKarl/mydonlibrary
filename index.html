@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拥抱黎明的图书馆</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gold: #D4AF37;
+            --primary-white: #F5F5F5;
+            --primary-blue: #2A5C8B;
+            --primary-red: #8B0000;
+            --parchment: #F8F1E5;
+            --dark-parchment: #E8D9B5;
+            --stone-gray: #7A7A7A;
+            --shadow-color: rgba(0, 0, 0, 0.2);
+            --column-width: 1100px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', 'Georgia', serif;
+        }
+
+        body {
+            background-color: var(--parchment);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23e8d9b5' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* 顶部导航栏 */
+        header {
+            background: linear-gradient(to right, var(--primary-white), var(--parchment));
+            border-bottom: 4px solid var(--primary-gold);
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-white);
+            font-size: 24px;
+            border: 3px solid var(--primary-gold);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .site-title h1 {
+            font-size: 1.8rem;
+            color: var(--primary-red);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            letter-spacing: 1px;
+        }
+
+        .site-title p {
+            color: var(--stone-gray);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        .language-switcher {
+            display: flex;
+            gap: 5px;
+        }
+
+        .lang-btn {
+            padding: 6px 12px;
+            background-color: var(--primary-white);
+            border: 2px solid var(--primary-gold);
+            border-radius: 4px;
+            color: var(--primary-blue);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .lang-btn:hover {
+            background-color: var(--primary-gold);
+            color: var(--primary-white);
+        }
+
+        .lang-btn.active {
+            background-color: var(--primary-blue);
+            color: var(--primary-white);
+            border-color: var(--primary-blue);
+        }
+
+        .admin-info {
+            text-align: right;
+            font-size: 0.8rem;
+            color: var(--stone-gray);
+        }
+
+        /* 主要内容区域 */
+        .container {
+            max-width: var(--column-width);
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        /* 特色展示区 */
+        .featured-section {
+            margin-bottom: 2.5rem;
+            border: 8px double var(--primary-gold);
+            border-radius: 12px;
+            padding: 1.2rem;
+            background-color: var(--primary-white);
+            box-shadow: 0 8px 20px var(--shadow-color);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-gold);
+        }
+
+        .section-icon {
+            font-size: 1.6rem;
+            margin-right: 10px;
+            color: var(--primary-blue);
+        }
+
+        .section-title h2 {
+            color: var(--primary-red);
+            font-size: 1.6rem;
+        }
+
+        .featured-video {
+            width: 100%;
+            height: 420px;
+            background-color: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .video-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .featured-image-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .featured-image-cover:hover {
+            transform: scale(1.02);
+        }
+
+        .featured-play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .video-container:hover .featured-play-overlay {
+            opacity: 1;
+        }
+
+        .featured-play-overlay i {
+            font-size: 4rem;
+            color: var(--primary-gold);
+            margin-bottom: 1rem;
+        }
+
+        .featured-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem;
+            background-color: var(--dark-parchment);
+            border-radius: 4px;
+        }
+
+        .featured-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        .featured-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 3px 8px;
+            background-color: var(--primary-red);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        /* 动画陈列区 */
+        .episodes-section, .illustrations-section {
+            margin-bottom: 2.5rem;
+            border: 2px solid var(--primary-gold);
+            border-radius: 8px;
+            padding: 1.2rem;
+            background-color: var(--primary-white);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+
+        .sort-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .sort-btn {
+            padding: 6px 12px;
+            background-color: var(--parchment);
+            border: 2px solid var(--stone-gray);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .sort-btn:hover {
+            background-color: var(--dark-parchment);
+        }
+
+        .sort-btn.active {
+            background-color: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .episodes-grid, .illustrations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .episode-card, .illustration-card {
+            border: 1px solid var(--dark-parchment);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background-color: var(--parchment);
+            cursor: pointer;
+        }
+
+        .episode-card:hover, .illustration-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px var(--shadow-color);
+        }
+
+        .card-thumbnail {
+            height: 150px;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-cover-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .episode-card:hover .card-cover-image,
+        .illustration-card:hover .card-cover-image {
+            transform: scale(1.05);
+        }
+
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .episode-card:hover .card-overlay,
+        .illustration-card:hover .card-overlay {
+            opacity: 1;
+        }
+
+        .card-overlay i {
+            font-size: 2rem;
+            color: var(--primary-gold);
+        }
+
+        .card-content {
+            padding: 0.8rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+            min-height: 2.8rem;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--stone-gray);
+            margin-bottom: 0.6rem;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 0.5rem;
+        }
+
+        /* 分类标签 */
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1.2rem;
+        }
+
+        .category-tab {
+            padding: 6px 12px;
+            background-color: var(--parchment);
+            border: 2px solid var(--stone-gray);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .category-tab:hover {
+            background-color: var(--dark-parchment);
+        }
+
+        .category-tab.active {
+            background-color: var(--primary-red);
+            color: white;
+            border-color: var(--primary-red);
+        }
+
+        /* 页脚 */
+        footer {
+            background-color: var(--stone-gray);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border-top: 4px solid var(--primary-gold);
+        }
+
+        .footer-content {
+            max-width: var(--column-width);
+            margin: 0 auto;
+        }
+
+        .copyright {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #ddd;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .featured-video {
+                height: 250px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            
+            .episodes-grid, .illustrations-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 12px;
+                padding: 0.8rem;
+            }
+            
+            .admin-info {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header>
+        <div class="logo-container">
+            <div class="logo">
+                <i class="fas fa-book"></i>
+            </div>
+            <div class="site-title">
+                <h1 id="site-main-title">拥抱黎明的图书馆</h1>
+                <p id="site-subtitle">Library of Dawn's Embrace</p>
+            </div>
+        </div>
+        
+        <div class="admin-info">
+            <p id="admin-text">管理员: <strong>Uryan</strong></p>
+            <p id="site-description">翁法罗斯二创作品集</p>
+        </div>
+        
+        <div class="language-switcher">
+            <button class="lang-btn active" id="lang-zh">中文</button>
+            <button class="lang-btn" id="lang-en">English</button>
+        </div>
+    </header>
+    
+    <!-- 主要内容区域 -->
+    <div class="container">
+        <!-- 特色展示区 -->
+        <section class="featured-section">
+            <div class="section-title">
+                <i class="fas fa-star section-icon"></i>
+                <h2 id="featured-title">最新动画</h2>
+            </div>
+            
+            <div class="featured-video">
+                <div class="video-container" id="featured-video-container">
+                    <!-- 视频/图片封面将动态加载 -->
+                </div>
+            </div>
+            
+            <div class="featured-info">
+                <div class="featured-title" id="featured-ep-title">第三集《万敌，你为什么戴蓝宝石耳坠》</div>
+                <div class="featured-tags">
+                    <span class="tag">翁法罗斯</span>
+                    <span class="tag">崩坏：星穹铁道</span>
+                    <span class="tag">万敌</span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 动画陈列区 -->
+        <section class="episodes-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-film section-icon"></i>
+                    <h2 id="episodes-title">图书馆的影音库</h2>
+                </div>
+                <div class="sort-buttons">
+                    <button class="sort-btn active" id="sort-story">按故事发展顺序</button>
+                    <button class="sort-btn" id="sort-update">按更新顺序</button>
+                </div>
+            </div>
+            
+            <div class="episodes-grid" id="episodes-container">
+                <!-- 动画卡片将通过JavaScript动态生成 -->
+            </div>
+        </section>
+        
+        <!-- 插画陈列区 -->
+        <section class="illustrations-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-palette section-icon"></i>
+                    <h2 id="illustrations-title">图书馆的藏画馆</h2>
+                </div>
+            </div>
+            
+            <div class="category-tabs">
+                <button class="category-tab active" data-category="all">全部</button>
+                <button class="category-tab" data-category="serious">正经插画</button>
+                <button class="category-tab" data-category="meme">梗图</button>
+            </div>
+            
+            <div class="illustrations-grid" id="illustrations-container">
+                <!-- 插画卡片将通过JavaScript动态生成 -->
+            </div>
+        </section>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-content">
+            <div class="logo">
+                <i class="fas fa-book"></i>
+            </div>
+            <h3 id="footer-title">拥抱黎明的图书馆</h3>
+            <p id="footer-description">翁法罗斯二创作品集 | 管理员: Uryan</p>
+            <p class="copyright" id="footer-copyright">© 2025 拥抱黎明的图书馆 | 本网站为崩坏：星穹铁道同人作品展示网站</p>
+        </div>
+    </footer>
+    
+    <script>
+        // 网站数据 - 中英双语
+        const websiteData = {
+            zh: {
+                siteTitle: "拥抱黎明的图书馆",
+                siteSubtitle: "Library of Dawn's Embrace",
+                adminText: "管理员: ",
+                siteDescription: "翁法罗斯二创作品集",
+                footerTitle: "拥抱黎明的图书馆",
+                footerDescription: "翁法罗斯二创作品集 | 管理员: Uryan",
+                footerCopyright: "© 2025 拥抱黎明的图书馆 | 本网站为崩坏：星穹铁道同人作品展示网站",
+                featuredTitle: "最新动画",
+                episodesTitle: "图书馆的影音库",
+                illustrationsTitle: "图书馆的藏画馆",
+                sortStory: "按故事发展顺序",
+                sortUpdate: "按更新顺序",
+                categoryAll: "全部",
+                categorySerious: "正经插画",
+                categoryMeme: "梗图",
+                featuredVideoTitle: "第三集《万敌，你为什么戴蓝宝石耳坠》",
+                featuredEpTitle: "第三集《万敌，你为什么戴蓝宝石耳坠》",
+                episodes: [
+                    {
+                        id: 1,
+                        title: "第一集《万敌，我要去当祭品了》",
+                        storyOrder: 1,
+                        updateDate: "2025年05月05日",
+                        updateDateISO: "2025-05-05",
+                        tags: ["翁法罗斯", "崩坏：星穹铁道", "万敌"],
+                        chineseLink: "https://www.bilibili.com/video/BV1EUVqzpEnh/",
+                        englishLink: "https://x.com/UryanKarl/status/1919328501749998045",
+                        bvid: "BV1EUVqzpEnh",
+                        coverImage: "https://pbs.twimg.com/media/GlgyljraoAA_7qR?format=jpg&name=large"
+                    },
+                    {
+                        id: 2,
+                        title: "第二集《万敌和白厄是什么关系》",
+                        storyOrder: 2,
+                        updateDate: "2025年04月28日",
+                        updateDateISO: "2025-04-28",
+                        tags: ["翁法罗斯", "崩坏：星穹铁道", "万敌", "白厄"],
+                        chineseLink: "https://www.bilibili.com/video/BV1SnLmzME8u/",
+                        englishLink: "https://x.com/UryanKarl/status/1917085258551595023",
+                        bvid: "BV1SnLmzME8u",
+                        coverImage: "https://pbs.twimg.com/media/GlgyljraoAA_7qR?format=jpg&name=large"
+                    },
+                    {
+                        id: 3,
+                        title: "第三集《万敌，你为什么戴蓝宝石耳坠》",
+                        storyOrder: 3,
+                        updateDate: "2025年11月05日",
+                        updateDateISO: "2025-11-05",
+                        tags: ["翁法罗斯", "崩坏：星穹铁道", "万敌", "蓝宝石耳坠"],
+                        chineseLink: "https://www.bilibili.com/video/BV15N1WBTEb9",
+                        englishLink: "https://x.com/UryanKarl/status/1986813834653564935",
+                        bvid: "BV15N1WBTEb9",
+                        coverImage: "https://pbs.twimg.com/media/GlgyljraoAA_7qR?format=jpg&name=large"
+                    }
+                ],
+                illustrations: [
+                    {
+                        id: 1,
+                        title: "《祝你战无不胜，迈德漠斯》",
+                        updateDate: "2025年03月1日",
+                        updateDateISO: "2025-03-01",
+                        category: "serious",
+                        tags: ["翁法罗斯", "崩坏：星穹铁道", "迈德漠斯"],
+                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2bdff323b",
+                        englishLink: "https://x.com/UryanKarl/status/1895507738068930788",
+                        coverImage: "https://pbs.twimg.com/media/GlgyljraoAA_7qR?format=jpg&name=large"
+                    },
+                    {
+                        id: 2,
+                        title: "《纯蓝》",
+                        updateDate: "2025年03月8日",
+                        updateDateISO: "2025-03-08",
+                        category: "serious",
+                        tags: ["翁法罗斯", "崩坏：星穹铁道", "纯蓝"],
+                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be0d4341",
+                        englishLink: "https://x.com/UryanKarl/status/1898323112422433221",
+                        coverImage: "https://pbs.twimg.com/media/GlgyljraoAA_7qR?format=jpg&name=large"
+                    },
+                    {
+                        id: 3,
+                        title: "《万敌的日常》",
+                        updateDate: "2025年04月15日",
+                        updateDateISO: "2025-04-15",
+                        category: "meme",
+                        tags: ["翁法罗斯", "崩坏：星穹铁道", "万敌", "搞笑"],
+                        chineseLink: "#",
+                        englishLink: "#",
+                        coverImage: "https://pbs.twimg.com/media/GlgyljraoAA_7qR?format=jpg&name=large"
+                    },
+                    {
+                        id: 4,
+                        title: "《白厄的图书馆时光》",
+                        updateDate: "2025年05月20日",
+                        updateDateISO: "2025-05-20",
+                        category: "serious",
+                        tags: ["翁法罗斯", "崩坏：星穹铁道", "白厄", "图书馆"],
+                        chineseLink: "#",
+                        englishLink: "#",
+                        coverImage: "https://pbs.twimg.com/media/GlgyljraoAA_7qR?format=jpg&name=large"
+                    }
+                ]
+            },
+            en: {
+                siteTitle: "Library of Dawn's Embrace",
+                siteSubtitle: "拥抱黎明的图书馆",
+                adminText: "Admin: ",
+                siteDescription: "Amphoreus Fan Creations",
+                footerTitle: "Library of Dawn's Embrace",
+                footerDescription: "Amphoreus Fan Creations | Admin: Uryan",
+                footerCopyright: "© 2025 Library of Dawn's Embrace | This site showcases Honkai: Star Rail fan works",
+                featuredTitle: "Latest Animation",
+                episodesTitle: "Library's Video Archive",
+                illustrationsTitle: "Library's Art Gallery",
+                sortStory: "By Story Order",
+                sortUpdate: "By Update Date",
+                categoryAll: "All",
+                categorySerious: "Serious Art",
+                categoryMeme: "Meme",
+                featuredVideoTitle: "Episode 3: 'Wandi, Why Are You Wearing Sapphire Earrings?'",
+                featuredEpTitle: "Episode 3: 'Wandi, Why Are You Wearing Sapphire Earrings?'",
+                episodes: [
+                    {
+                        id: 1,
+                        title: "Episode 1: 'Wandi, I'm Going to Be a Sacrifice'",
+                        storyOrder: 1,
+                        updateDate: "May 05, 2025",
+                        updateDateISO: "2025-05-05",
+                        tags: ["Amphoreus", "Honkai: Star Rail", "Wandi"],
+                        chineseLink: "https://www.bilibili.com/video/BV1EUVqzpEnh/",
+                        englishLink: "https://x.com/UryanKarl/status/1919328501749998045",
+                        bvid: "BV1EUVqzpEnh",
+                        coverImage: "https://pbs.twimg.com/media/GlgyljraoAA_7qR?format=jpg&name=large"
+                    },
+                    {
+                        id: 2,
+                        title: "Episode 2: 'What's the Relationship Between Wandi and Bai E?'",
+                        storyOrder: 2,
+                        updateDate: "April 28, 2025",
+                        updateDateISO: "2025-04-28",
+                        tags: ["Amphoreus", "Honkai: Star Rail", "Wandi", "Bai E"],
+                        chineseLink: "https://www.bilibili.com/video/BV1SnLmzME8u/",
+                        englishLink: "https://x.com/UryanKarl/status/1917085258551595023",
+                        bvid: "BV1SnLmzME8u",
+                        coverImage: "https://pbs.twimg.com/media/GlgyljraoAA_7qR?format=jpg&name=large"
+                    },
+                    {
+                        id: 3,
+                        title: "Episode 3: 'Wandi, Why Are You Wearing Sapphire Earrings?'",
+                        storyOrder: 3,
+                        updateDate: "November 05, 2025",
+                        updateDateISO: "2025-11-05",
+                        tags: ["Amphoreus", "Honkai: Star Rail", "Wandi", "Sapphire Earrings"],
+                        chineseLink: "https://www.bilibili.com/video/BV15N1WBTEb9",
+                        englishLink: "https://x.com/UryanKarl/status/1986813834653564935",
+                        bvid: "BV15N1WBTEb9",
+                        coverImage: "https://pbs.twimg.com/media/GlgyljraoAA_7qR?format=jpg&name=large"
+                    }
+                ],
+                illustrations: [
+                    {
+                        id: 1,
+                        title: "'May You Be Ever Victorious, Mademus'",
+                        updateDate: "March 1, 2025",
+                        updateDateISO: "2025-03-01",
+                        category: "serious",
+                        tags: ["Amphoreus", "Honkai: Star Rail", "Mademus"],
+                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2bdff323b",
+                        englishLink: "https://x.com/UryanKarl/status/1895507738068930788",
+                        coverImage: "https://pbs.twimg.com/media/GlgyljraoAA_7qR?format=jpg&name=large"
+                    },
+                    {
+                        id: 2,
+                        title: "'Pure Blue'",
+                        updateDate: "March 8, 2025",
+                        updateDateISO: "2025-03-08",
+                        category: "serious",
+                        tags: ["Amphoreus", "Honkai: Star Rail", "Pure Blue"],
+                        chineseLink: "https://karl-art.lofter.com/post/1dcc6edf_2be0d4341",
+                        englishLink: "https://x.com/UryanKarl/status/1898323112422433221",
+                        coverImage: "https://pbs.twimg.com/media/GlgyljraoAA_7qR?format=jpg&name=large"
+                    },
+                    {
+                        id: 3,
+                        title: "'Wandi's Daily Life'",
+                        updateDate: "April 15, 2025",
+                        updateDateISO: "2025-04-15",
+                        category: "meme",
+                        tags: ["Amphoreus", "Honkai: Star Rail", "Wandi", "Funny"],
+                        chineseLink: "#",
+                        englishLink: "#",
+                        coverImage: "https://pbs.twimg.com/media/GlgyljraoAA_7qR?format=jpg&name=large"
+                    },
+                    {
+                        id: 4,
+                        title: "'Bai E's Library Time'",
+                        updateDate: "May 20, 2025",
+                        updateDateISO: "2025-05-20",
+                        category: "serious",
+                        tags: ["Amphoreus", "Honkai: Star Rail", "Bai E", "Library"],
+                        chineseLink: "#",
+                        englishLink: "#",
+                        coverImage: "https://pbs.twimg.com/media/GlgyljraoAA_7qR?format=jpg&name=large"
+                    }
+                ]
+            }
+        };
+
+        // 当前语言和排序方式
+        let currentLanguage = 'zh';
+        let currentSort = 'story';
+        let currentCategory = 'all';
+
+        // 初始化网站
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化语言切换功能
+            initLanguageSwitcher();
+            
+            // 初始化排序功能
+            initSortButtons();
+            
+            // 初始化分类筛选功能
+            initCategoryTabs();
+            
+            // 渲染内容
+            renderContent();
+            
+            // 加载置顶视频/封面
+            loadFeaturedContent();
+        });
+
+        // 初始化语言切换功能
+        function initLanguageSwitcher() {
+            const zhBtn = document.getElementById('lang-zh');
+            const enBtn = document.getElementById('lang-en');
+            
+            zhBtn.addEventListener('click', () => {
+                if (currentLanguage !== 'zh') {
+                    currentLanguage = 'zh';
+                    zhBtn.classList.add('active');
+                    enBtn.classList.remove('active');
+                    renderContent();
+                    loadFeaturedContent();
+                }
+            });
+            
+            enBtn.addEventListener('click', () => {
+                if (currentLanguage !== 'en') {
+                    currentLanguage = 'en';
+                    enBtn.classList.add('active');
+                    zhBtn.classList.remove('active');
+                    renderContent();
+                    loadFeaturedContent();
+                }
+            });
+        }
+
+        // 初始化排序功能
+        function initSortButtons() {
+            const storyBtn = document.getElementById('sort-story');
+            const updateBtn = document.getElementById('sort-update');
+            
+            storyBtn.addEventListener('click', () => {
+                if (currentSort !== 'story') {
+                    currentSort = 'story';
+                    storyBtn.classList.add('active');
+                    updateBtn.classList.remove('active');
+                    renderEpisodes();
+                }
+            });
+            
+            updateBtn.addEventListener('click', () => {
+                if (currentSort !== 'update') {
+                    currentSort = 'update';
+                    updateBtn.classList.add('active');
+                    storyBtn.classList.remove('active');
+                    renderEpisodes();
+                }
+            });
+        }
+
+        // 初始化分类筛选功能
+        function initCategoryTabs() {
+            const tabs = document.querySelectorAll('.category-tab');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 移除所有标签的active类
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // 为当前点击的标签添加active类
+                    tab.classList.add('active');
+                    
+                    // 更新当前分类
+                    currentCategory = tab.getAttribute('data-category');
+                    
+                    // 重新渲染插画
+                    renderIllustrations();
+                });
+            });
+        }
+
+        // 加载置顶内容
+        function loadFeaturedContent() {
+            const container = document.getElementById('featured-video-container');
+            const episodes = websiteData[currentLanguage].episodes;
+            
+            // 找到最新的一集（按updateDateISO排序）
+            const latestEpisode = [...episodes].sort((a, b) => 
+                new Date(b.updateDateISO) - new Date(a.updateDateISO)
+            )[0];
+            
+            // 获取当前语言的链接
+            const link = currentLanguage === 'zh' ? latestEpisode.chineseLink : latestEpisode.englishLink;
+            
+            // 如果是中文环境，使用B站嵌入播放器
+            if (currentLanguage === 'zh') {
+                container.innerHTML = `
+                    <iframe 
+                        src="https://player.bilibili.com/player.html?bvid=${latestEpisode.bvid}&high_quality=1&autoplay=0" 
+                        width="100%" 
+                        height="100%" 
+                        frameborder="0" 
+                        allowfullscreen
+                        scrolling="no"
+                        sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts allow-popups">
+                    </iframe>
+                `;
+            } else {
+                // 英文环境，使用图片封面，点击跳转到推特
+                container.innerHTML = `
+                    <a href="${link}" target="_blank" style="display: block; width: 100%; height: 100%;">
+                        <img src="${latestEpisode.coverImage}" alt="${latestEpisode.title}" class="featured-image-cover">
+                        <div class="featured-play-overlay">
+                            <i class="fas fa-play-circle"></i>
+                            <p>Click to watch on X</p>
+                        </div>
+                    </a>
+                `;
+            }
+            
+            // 更新特色视频信息
+            document.getElementById('featured-ep-title').textContent = latestEpisode.title;
+        }
+
+        // 渲染所有内容
+        function renderContent() {
+            const data = websiteData[currentLanguage];
+            
+            // 更新页面标题
+            document.getElementById('site-main-title').textContent = data.siteTitle;
+            document.getElementById('site-subtitle').textContent = data.siteSubtitle;
+            document.getElementById('admin-text').innerHTML = `<strong>${data.adminText}</strong>Uryan`;
+            document.getElementById('site-description').textContent = data.siteDescription;
+            document.getElementById('footer-title').textContent = data.footerTitle;
+            document.getElementById('footer-description').textContent = data.footerDescription;
+            document.getElementById('footer-copyright').textContent = data.footerCopyright;
+            
+            // 更新各区域标题
+            document.getElementById('featured-title').textContent = data.featuredTitle;
+            document.getElementById('episodes-title').textContent = data.episodesTitle;
+            document.getElementById('illustrations-title').textContent = data.illustrationsTitle;
+            
+            // 更新排序按钮文字
+            document.getElementById('sort-story').textContent = data.sortStory;
+            document.getElementById('sort-update').textContent = data.sortUpdate;
+            
+            // 更新分类标签文字
+            document.querySelectorAll('.category-tab').forEach((tab, index) => {
+                if (index === 0) tab.textContent = data.categoryAll;
+                else if (index === 1) tab.textContent = data.categorySerious;
+                else if (index === 2) tab.textContent = data.categoryMeme;
+            });
+            
+            // 渲染动画和插画
+            renderEpisodes();
+            renderIllustrations();
+        }
+
+        // 渲染动画卡片
+        function renderEpisodes() {
+            const container = document.getElementById('episodes-container');
+            container.innerHTML = '';
+            
+            // 获取当前语言的数据
+            let episodes = [...websiteData[currentLanguage].episodes];
+            
+            // 根据当前排序方式对动画进行排序
+            if (currentSort === 'story') {
+                episodes.sort((a, b) => a.storyOrder - b.storyOrder);
+            } else {
+                // 按更新日期倒序排序（最新的在最前面）
+                episodes.sort((a, b) => new Date(b.updateDateISO) - new Date(a.updateDateISO));
+            }
+            
+            // 生成动画卡片
+            episodes.forEach(episode => {
+                const episodeCard = document.createElement('div');
+                episodeCard.className = 'episode-card';
+                
+                // 设置点击事件，根据当前语言跳转到对应链接
+                const link = currentLanguage === 'zh' ? episode.chineseLink : episode.englishLink;
+                episodeCard.onclick = () => {
+                    if (link && link !== '#') {
+                        window.open(link, '_blank');
+                    }
+                };
+                
+                // 根据集数设置不同的图标
+                const episodeIcon = episode.id === 1 ? 'fa-play' : 
+                                   episode.id === 2 ? 'fa-heart' : 
+                                   'fa-gem';
+                
+                episodeCard.innerHTML = `
+                    <div class="card-thumbnail episode-thumbnail">
+                        <img src="${episode.coverImage}" alt="${episode.title}" class="card-cover-image">
+                        <div class="card-overlay">
+                            <i class="fas ${episodeIcon}"></i>
+                        </div>
+                        <div style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.7); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">
+                            ${currentLanguage === 'zh' ? '第' + episode.id + '集' : 'Episode ' + episode.id}
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${episode.title}</h3>
+                        <div class="card-meta">
+                            <span>${currentLanguage === 'zh' ? '更新: ' : 'Updated: '}${episode.updateDate}</span>
+                            <span>${currentLanguage === 'zh' ? '故事顺序: ' : 'Story Order: '}${episode.storyOrder}</span>
+                        </div>
+                        <div class="card-tags">
+                            ${episode.tags.map(tag => `<span class="tag" style="font-size: 0.7rem; padding: 2px 6px;">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(episodeCard);
+            });
+        }
+
+        // 渲染插画卡片
+        function renderIllustrations() {
+            const container = document.getElementById('illustrations-container');
+            container.innerHTML = '';
+            
+            // 获取当前语言的数据
+            let illustrations = [...websiteData[currentLanguage].illustrations];
+            
+            // 根据当前分类筛选插画
+            if (currentCategory !== 'all') {
+                illustrations = illustrations.filter(illustration => illustration.category === currentCategory);
+            }
+            
+            // 按更新时间倒序排序（最新的在前）
+            illustrations.sort((a, b) => new Date(b.updateDateISO) - new Date(a.updateDateISO));
+            
+            // 生成插画卡片
+            illustrations.forEach(illustration => {
+                const illustrationCard = document.createElement('div');
+                illustrationCard.className = 'illustration-card';
+                
+                // 设置点击事件，根据当前语言跳转到对应链接
+                const link = currentLanguage === 'zh' ? illustration.chineseLink : illustration.englishLink;
+                illustrationCard.onclick = () => {
+                    if (link && link !== '#') {
+                        window.open(link, '_blank');
+                    }
+                };
+                
+                // 根据分类设置不同的图标
+                const illustrationIcon = illustration.category === 'serious' ? 'fa-paint-brush' : 'fa-laugh';
+                const categoryText = illustration.category === 'serious' ? 
+                    (currentLanguage === 'zh' ? '正经插画' : 'Serious Art') : 
+                    (currentLanguage === 'zh' ? '梗图' : 'Meme');
+                
+                illustrationCard.innerHTML = `
+                    <div class="card-thumbnail illustration-thumbnail">
+                        <img src="${illustration.coverImage}" alt="${illustration.title}" class="card-cover-image">
+                        <div class="card-overlay">
+                            <i class="fas ${illustrationIcon}"></i>
+                        </div>
+                        <div style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.7); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">
+                            ${categoryText}
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${illustration.title}</h3>
+                        <div class="card-meta">
+                            <span>${currentLanguage === 'zh' ? '更新: ' : 'Updated: '}${illustration.updateDate}</span>
+                        </div>
+                        <div class="card-tags">
+                            ${illustration.tags.map(tag => `<span class="tag" style="font-size: 0.7rem; padding: 2px 6px;">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(illustrationCard);
+            });
+            
+            // 如果没有插画，显示提示信息
+            if (illustrations.length === 0) {
+                const emptyMessage = document.createElement('div');
+                emptyMessage.style.textAlign = 'center';
+                emptyMessage.style.padding = '1.5rem';
+                emptyMessage.style.color = 'var(--stone-gray)';
+                emptyMessage.innerHTML = `<i class="fas fa-search" style="font-size: 1.8rem; margin-bottom: 0.8rem;"></i>
+                                         <p>${currentLanguage === 'zh' ? '当前分类下暂无作品' : 'No works in this category'}</p>`;
+                container.appendChild(emptyMessage);
+            }
+        }
+    </script>
+</body>
+</html>
