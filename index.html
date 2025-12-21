@@ -452,6 +452,117 @@
                 text-align: center;
             }
         }
+		/* 移动端专属优化 (屏幕宽度小于768px时生效) */
+@media (max-width: 768px) {
+    header {
+        padding: 0.5rem 1rem; /* 减少内边距 */
+        flex-direction: column; /* 改为垂直堆叠 */
+        gap: 0.5rem; /* 减少元素间距 */
+    }
+
+    .logo-container {
+        width: 100%;
+        justify-content: left; /* 居中对齐logo和标题 */
+        gap: 10px;
+    }
+
+    .logo {
+        width: 40px; /* 缩小logo */
+        height: 40px;
+        font-size: 18px;
+    }
+
+    .site-title h1 {
+        font-size: 1.4rem; /* 缩小主标题 */
+    }
+
+    .site-title p {
+        font-size: 0.75rem; /* 缩小副标题 */
+    }
+
+    .admin-info {
+        width: 100%;
+        text-align: center; /* 管理员信息居中 */
+        font-size: 0.75rem;
+        order: 3; /* 调整显示顺序到最后 */
+    }
+
+    .language-switcher {
+        position: absolute; /* 将语言切换器移到右上角 */
+        top: 1rem;
+        right: 1rem;
+    }
+
+    .lang-btn {
+        padding: 4px 8px; /* 缩小按钮 */
+        font-size: 0.8rem;
+    }
+
+    /* 同时也可以微调一下主要内容区的上边距 */
+    .container {
+        padding-top: 0.8rem;
+    }
+	    /* === 新增：卡片布局优化 === */
+    /* 将所有网格布局改为一行两列 */
+    .episodes-grid,
+    .illustrations-grid,
+    .research-grid,
+    .skin-grid {
+        grid-template-columns: repeat(2, 1fr); /* 强制一行两列 */
+        gap: 0.8rem; /* 缩小卡片间距 */
+    }
+
+    /* 缩小卡片整体尺寸 */
+    .episode-card,
+    .illustration-card,
+    .research-card,
+    .skin-card {
+        transform: none; /* 移动端可移除悬浮动画以节省性能 */
+    }
+
+    /* 缩小卡片封面图高度 */
+    .card-thumbnail {
+        height: 100px; /* 原为150px */
+    }
+
+    /* 缩小卡片内部文字 */
+    .card-content {
+        padding: 0.6rem;
+    }
+
+    .card-title {
+        font-size: 0.95rem; /* 原为1.1rem */
+        min-height: 2.4rem; /* 调整最小高度 */
+        margin-bottom: 0.3rem;
+    }
+
+    .card-meta {
+        font-size: 0.7rem; /* 原为0.8rem */
+        margin-bottom: 0.4rem;
+    }
+
+    /* 缩小标签尺寸 */
+    .card-tags .tag {
+        font-size: 0.6rem; /* 原为0.7rem */
+        padding: 1px 4px; /* 原为2px 6px */
+        margin: 1px;
+    }
+
+    /* 缩小卡片角标（如“第1集”） */
+    .card-thumbnail > div:last-child {
+        font-size: 0.7rem;
+        padding: 1px 4px;
+        bottom: 4px;
+        right: 4px;
+    }
+
+    /* === 可选：如果您觉得两列时卡片信息过于拥挤，可以启用此样式隐藏标签 === */
+    /*
+    .card-tags {
+        display: none;
+    }
+    */
+}
     </style>
 </head>
 <body>
