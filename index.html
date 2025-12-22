@@ -841,7 +841,7 @@
     /* 语言切换按钮 */
     .lang-btn {
         font-size: 0.75rem !important; /* 从0.85rem缩小 */
-        padding: 4px 8px !important; /* 缩小内边距 */
+        padding: 2px 6px !important; /* 缩小内边距 */
     }
     
     /* 管理员信息 */
@@ -1545,7 +1545,7 @@
                     <div class="card-content">
                         <h3 class="card-title">${work.title}</h3>
                         <div class="card-meta">
-                            <span>${lang === 'zh' ? '更新: ' : 'Updated: '}${work.updateDate}</span>
+                            <span>${lang === 'zh' ? '' : ''}${work.updateDate}</span>
                             ${work.fileSize ? `<span>${work.fileSize}</span>` : ''}
                         </div>
                         <div class="card-tags">
