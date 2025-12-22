@@ -251,7 +251,7 @@
         .section-title {
             display: flex;
             align-items: center;
-            margin-bottom: 1.2rem;
+            margin-bottom: 0.2rem;
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--primary-gold);
         }
@@ -499,7 +499,7 @@
         .category-tabs {
             display: flex;
             gap: 8px;
-            margin-bottom: 1.2rem;
+            margin-bottom: 0.2rem;
         }
 
         .category-tab {
@@ -577,6 +577,7 @@
         
         /* 移动端专属优化 (屏幕宽度小于768px时生效) */
         @media (max-width: 768px) {
+		
             header {
                 padding: 0.2rem 1rem;
                 flex-direction: column;
@@ -632,7 +633,7 @@
 
             .language-switcher {
                 position: absolute;
-                top: 3.8rem;
+                top: 2.8rem;
                 right: 1rem;
                 z-index: 999; /* 降低语言切换器的z-index，确保菜单在它上面 */
             }
@@ -824,6 +825,109 @@
                     top: 65px;
                 }
             }
+			/* 在现有移动端媒体查询中新增以下样式 */
+
+    /* ================= 统一的文字缩小策略 ================= */
+    
+    /* 1. Header区域文字 */
+    .site-title h1 {
+        font-size: 1.1rem !important; /* 从1.3rem缩小 */
+    }
+    
+    .site-title p {
+        font-size: 0.7rem !important; /* 从0.8rem缩小 */
+    }
+    
+    /* 语言切换按钮 */
+    .lang-btn {
+        font-size: 0.75rem !important; /* 从0.85rem缩小 */
+        padding: 4px 8px !important; /* 缩小内边距 */
+    }
+    
+    /* 管理员信息 */
+    .admin-info p {
+        font-size: 0.65rem !important; /* 从0.7rem缩小 */
+    }
+    
+    /* 2. 主要内容区标题 */
+    .section-title h2 {
+        font-size: 1.0rem !important; /* 从1.6rem缩小 */
+    }
+    
+    .section-icon {
+        font-size: 1.2rem !important; /* 图标也相应缩小 */
+    }
+    
+    /* 特色区域标题 */
+    .featured-title {
+        font-size: 0.9rem !important; /* 从1.3rem缩小 */
+    }
+    
+    .featured-tags .tag {
+        font-size: 0.65rem !important; /* 标签文字缩小 */
+        padding: 2px 6px !important;
+    }
+    
+    /* 3. 卡片区域文字 */
+    .card-title {
+        font-size: 0.75rem !important; /* 从0.9rem缩小 */
+        min-height: 1.8rem !important; /* 减少最小高度 */
+        line-height: 1.2 !important; /* 调整行高 */
+        -webkit-line-clamp: 1 !important; /* 保持两行显示 */
+    }
+    
+    .card-meta {
+        font-size: 0.60rem !important; /* 从0.7rem缩小 */
+        line-height: 1.2 !important;
+    }
+    
+    .card-tags .tag {
+        font-size: 0.55rem !important; /* 从0.6rem缩小 */
+        padding: 1px 4px !important;
+        margin: 1px !important;
+    }
+    
+    /* 4. 按钮文字 */
+    .sort-btn, .category-tab {
+        font-size: 0.8rem !important; /* 从0.9rem缩小 */
+        padding: 2px 8px !important; /* 适当调整内边距 */
+    }
+    
+    /* 5. 页脚文字 */
+    footer h3 {
+        font-size: 1.0rem !important;
+    }
+    
+    footer p {
+        font-size: 0.75rem !important;
+    }
+    
+    .copyright {
+        font-size: 0.65rem !important; /* 从0.8rem缩小 */
+    }
+    
+    /* 6. 导航菜单文字 */
+    .nav-item {
+        font-size: 0.85rem !important;
+    }
+    
+    .nav-item i {
+        font-size: 1rem !important;
+    }
+    
+    /* 7. 视频播放按钮文字 */
+    .featured-play-overlay p {
+        font-size: 0.9rem !important;
+    }
+    
+    /* 8. 角标文字 */
+    .card-thumbnail > div {
+        font-size: 0.7rem !important; /* 卡片上的"第X集"等文字 */
+        padding: 1px 6px !important;
+        bottom: 4px !important;
+        right: 4px !important;
+    }
+
         }
         
         /* 防止滚动穿透 - 当导航菜单打开时阻止body滚动 */
