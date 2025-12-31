@@ -283,7 +283,20 @@
             position: relative;
             cursor: pointer;
         }
-
+		
+		.duration-badge {
+			position: absolute;
+			bottom: 8px; /* 距离底部，和已有的“第X集”角标对齐 */
+			left: 8px;   /* 距离左侧 */
+			background-color: rgba(0, 0, 0, 0.75); /* 半透明黑色背景 */
+			color: white;
+			padding: 2px 6px;
+			border-radius: 4px;
+			font-size: 0.8rem;
+			font-family: monospace; /* 等宽字体，显示时间更整齐 */
+			z-index: 2; /* 确保标签在封面图之上 */
+		}
+		
         .featured-image-cover {
             width: 100%;
             height: 100%;
@@ -1100,7 +1113,8 @@
                 chineseLink: "https://www.bilibili.com/video/BV1EUVqzpEnh/",
                 englishLink: "https://x.com/UryanKarl/status/1919328501749998045",
                 bvid: "BV1EUVqzpEnh",
-                coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WhpR8OaB223v8lbh1VhTn3l-rKO4wACGB4AAi-0QVYY8g3sEYGtTzYE.jpg"
+                coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WhpR8OaB223v8lbh1VhTn3l-rKO4wACGB4AAi-0QVYY8g3sEYGtTzYE.jpg",
+				duration: 54 // 新增：视频时长（秒）
             },
             {
                 id: 2,
@@ -1110,7 +1124,8 @@
                 chineseLink: "https://www.bilibili.com/video/BV15PEEzMEiM",
                 englishLink: "https://x.com/UryanKarl/status/1921952005532102743",
                 bvid: "BV15PEEzMEiM",
-                coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WZpR8Oa-uNstbiSP15qoRstmj020gACFh4AAi-0QVYjSw3G9fU_PjYE.jpg"
+                coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WZpR8Oa-uNstbiSP15qoRstmj020gACFh4AAi-0QVYjSw3G9fU_PjYE.jpg",
+				duration: 1*60+5 // 新增：视频时长（秒）
             },
 			
                     {
@@ -1121,7 +1136,8 @@
                         chineseLink: "https://www.bilibili.com/video/BV1SnLmzME8u/",
                         englishLink: "https://x.com/UryanKarl/status/1917085258551595023",
                         bvid: "BV1SnLmzME8u",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WppR8Oht8PvHFPp7fftO9CZtn2UwAACGh4AAi-0QVZkexUYBONdezYE.jpg"
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WppR8Oht8PvHFPp7fftO9CZtn2UwAACGh4AAi-0QVZkexUYBONdezYE.jpg",
+						duration: 4*60+32 // 新增：视频时长（秒）
                     },
 					{
                         id: 4,
@@ -1131,7 +1147,8 @@
                         chineseLink: "https://www.bilibili.com/video/BV1DVhJzPEE7",
                         englishLink: "https://x.com/UryanKarl/status/1977595873824760010",
                         bvid: "BV1DVhJzPEE7",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WlpR8OahbojFzHzzvcKo3VuxKEghQACGR4AAi-0QVYN0PA_1ymYIzYE.jpg"
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WlpR8OahbojFzHzzvcKo3VuxKEghQACGR4AAi-0QVYN0PA_1ymYIzYE.jpg",
+						duration: 4*60+19 // 新增：视频时长（秒）
                     },
 					{
                         id: 5,
@@ -1141,7 +1158,8 @@
                         chineseLink: "https://www.bilibili.com/video/BV1UEb8zXEdn",
                         englishLink: "https://x.com/UryanKarl/status/1977595873824760010",
                         bvid: "BV1UEb8zXEdn",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WdpR8Oai-B3UPfKPJMW1nYk65ANdAACFx4AAi-0QVabQMSwKUiDoTYE.jpg"
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WdpR8Oai-B3UPfKPJMW1nYk65ANdAACFx4AAi-0QVabQMSwKUiDoTYE.jpg",
+						duration: 4*60+8 // 新增：视频时长（秒）
                     },
 					{
                         id: 6,
@@ -1151,7 +1169,8 @@
                         chineseLink: "https://www.bilibili.com/video/BV1ZCxez3ECk/",
                         englishLink: "https://x.com/UryanKarl/status/1977595873824760010",
                         bvid: "BV1ZCxez3ECk",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WtpR8Ohcwi8SpuLhHYS1ndiV5mDOgACGx4AAi-0QVaLCj4oyqpxsTYE.jpg"
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WtpR8Ohcwi8SpuLhHYS1ndiV5mDOgACGx4AAi-0QVaLCj4oyqpxsTYE.jpg",
+						duration: 4*60+38 // 新增：视频时长（秒）
                     },
                     {
                         id: 7,
@@ -1161,7 +1180,8 @@
                         chineseLink: "https://www.bilibili.com/video/BV15N1WBTEb9",
                         englishLink: "https://x.com/UryanKarl/status/1986813834653564935",
                         bvid: "BV15N1WBTEb9",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WVpR8OZufKgZh-kuNe_zNDt0ZiiKQACFR4AAi-0QVaNa5IObu4-izYE.jpg"
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEN7WVpR8OZufKgZh-kuNe_zNDt0ZiiKQACFR4AAi-0QVaNa5IObu4-izYE.jpg",
+						duration: 9*60+11 // 新增：视频时长（秒）
                     },
                     {
                         id: 10,
@@ -1171,7 +1191,8 @@
                         chineseLink: "https://www.bilibili.com/video/BV15ZvaBvEJr/",
                         englishLink: "https://x.com/UryanKarl/status/2006324367068938702",
                         bvid: "BV15ZvaBvEJr",
-                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEOw-JpVQd-cO44nbrWZYPdt4H8S2Ao-wACJjoAAnnVqFbVoa_cQkx0EjgE.jpg"
+                        coverImage: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAEOw-JpVQd-cO44nbrWZYPdt4H8S2Ao-wACJjoAAnnVqFbVoa_cQkx0EjgE.jpg",
+						duration: 4*60+51 // 新增：视频时长（秒）
                     },
             // ===== 插画 (type: 'illustration') =====
             {
@@ -1483,7 +1504,20 @@
                 return isoString;
             }
         }
-
+		
+		// 辅助函数：将秒数格式化为 MM:SS 或 HH:MM:SS
+		function formatDuration(totalSeconds) {
+			const hours = Math.floor(totalSeconds / 3600);
+			const minutes = Math.floor((totalSeconds % 3600) / 60);
+			const seconds = totalSeconds % 60;
+			
+			if (hours > 0) {
+				return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+			} else {
+				return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+			}
+		}
+		
         // ===================== 3. 核心渲染函数 =====================
         // 通用函数：渲染任何一种作品类型的卡片
         function renderWorks(workType, containerId, lang) {
@@ -1556,6 +1590,8 @@
                 // 构建卡片的HTML内容
                 card.innerHTML = `
                     <div class="card-thumbnail" style="background: ${bgGradient};">
+					<!-- 新增：时长标签 -->
+					${work.duration ? `<div class="duration-badge">${formatDuration(work.duration)}</div>` : ''}
                         <img src="${work.coverImage}" alt="${work.title}" class="card-cover-image" 
                              onerror="this.style.display='none'; this.parentNode.innerHTML='<i class=\\'fas ${typeIcon}\\' style=\\'font-size: 3rem;\\'></i>';">
                         <div class="card-overlay">
