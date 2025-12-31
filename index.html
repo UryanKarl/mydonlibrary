@@ -284,17 +284,40 @@
             cursor: pointer;
         }
 		
-		.duration-badge {
+		.corner-badge {
 			position: absolute;
-			bottom: 8px; /* 距离底部，和已有的“第X集”角标对齐 */
-			left: 8px;   /* 距离左侧 */
-			background-color: rgba(0, 0, 0, 0.75); /* 半透明黑色背景 */
+			bottom: 8px;
+			right: 8px;
+			background-color: rgba(0, 0, 0, 0.7);
 			color: white;
-			padding: 2px 6px;
+			padding: 2px 6px; /* 调整为和左边一致 */
 			border-radius: 4px;
 			font-size: 0.8rem;
-			font-family: monospace; /* 等宽字体，显示时间更整齐 */
-			z-index: 2; /* 确保标签在封面图之上 */
+			/* 同样添加溢出控制 */
+			max-width: 80px;
+			box-sizing: border-box;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		
+		.duration-badge {
+			position: absolute;
+			bottom: 8px; /* 和集数标签保持同一水平线 */
+			left: 8px;   /* 在左侧对称出现 */
+			background-color: rgba(0, 0, 0, 0.7); /* 半透明黑色背景 */
+			color: white;
+			padding: 2px 6px; /* 和集数标签完全一致的内边距 */
+			border-radius: 4px; /* 和集数标签完全一致的圆角 */
+			font-size: 0.8rem; /* 字号保持一致 */
+			font-family: monospace;
+			z-index: 2;
+			/* --- 新增的关键样式 --- */
+			max-width: 40px; /* 设定一个足够容纳“HH:MM:SS”的固定最大宽度 */
+			box-sizing: border-box; /* 内边距包含在宽度内 */
+			white-space: nowrap; /* 禁止文字换行 */
+			overflow: hidden; /* 隐藏超出部分 */
+			text-overflow: ellipsis; /* 超出部分用“...”表示 */
 		}
 		
         .featured-image-cover {
@@ -1597,9 +1620,7 @@
                         <div class="card-overlay">
                             <i class="fas ${typeIcon}"></i>
                         </div>
-                        <div style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.7); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">
-                            ${badgeText}
-                        </div>
+                        <div class="corner-badge">${badgeText}</div>
                     </div>
                     <div class="card-content">
                         <h3 class="card-title">${work.title}</h3>
